@@ -1,4 +1,19 @@
-self.addEventListener("install",e=>{
- e.waitUntil(caches.open("pwa").then(c=>c.addAll(["index.html","app.js","style.css","manifest.json"])))
+
+self.addEventListener("install",event=>{
+ self.skipWaiting();
+ event.waitUntil(
+   caches.open("pwa-v3").then(cache=>{
+     return cache.addAll([
+       "index.html","style.css","app.js","manifest.json"
+     ]);
+   })
+ );
 });
-self.addEventListener("fetch",e=>{ e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))) });
+
+self.addEventListener("activate",event=>{ clients.claim(); });
+
+self.addEventListener("fetch",event=>{
+ event.respondWith(
+   caches.match(event.request).then(resp=>resp || fetch(event.request))
+ );
+});

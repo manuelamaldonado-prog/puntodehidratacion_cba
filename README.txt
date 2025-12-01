@@ -1,1 +1,1 @@
-PWA lista.
+PWA con todos los bloques y botón siguiente moderno.

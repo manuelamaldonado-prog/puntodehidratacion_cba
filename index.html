@@ -30,21 +30,56 @@
 
 <p id="capacidadTexto"></p>
 
-<button onclick="nextStep()">Siguiente</button>
+<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
 </div>
 
 
 <div id="step2" class="step">
-<h1>Confort térmico</h1>
-<div id="formulario"></div>
-<button onclick="prevStep()">Volver</button>
-<button onclick="calcular()">Calcular</button>
+<h1>Bloque 2 – Confort térmico</h1>
+<div id="form2"></div>
+<button onclick="prevStep()" class="back-btn">← Volver</button>
+<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
 </div>
 
 <div id="step3" class="step">
+<h1>Bloque 3 – Accesibilidad y orientación</h1>
+<div id="form3"></div>
+<button onclick="prevStep()" class="back-btn">← Volver</button>
+<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
+</div>
+
+<div id="step4" class="step">
+<h1>Bloque 4 – Envolvente térmica</h1>
+<div id="form4"></div>
+<button onclick="prevStep()" class="back-btn">← Volver</button>
+<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
+</div>
+
+<div id="step5" class="step">
+<h1>Bloque 5 – Protecciones pasivas</h1>
+<div id="form5"></div>
+<button onclick="prevStep()" class="back-btn">← Volver</button>
+<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
+</div>
+
+<div id="step6" class="step">
+<h1>Bloque 6 – Condiciones internas</h1>
+<div id="form6"></div>
+<button onclick="prevStep()" class="back-btn">← Volver</button>
+<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
+</div>
+
+<div id="step7" class="step">
+<h1>Bloque 7 – Servicios</h1>
+<div id="form7"></div>
+<button onclick="prevStep()" class="back-btn">← Volver</button>
+<button onclick="calcular()" class="next-btn">Calcular resultado</button>
+</div>
+
+<div id="step8" class="step">
 <h1>Resultado</h1>
 <div id="resultado"></div>
-<button onclick="prevStep()">Volver</button>
+<button onclick="location.reload()" class="next-btn">Nueva evaluación</button>
 </div>
 
 <script src="app.js"></script>
