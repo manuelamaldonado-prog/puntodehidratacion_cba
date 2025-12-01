@@ -3,16 +3,50 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Evaluación Punto de Hidratación</title>
+<title>Punto de Hidratación</title>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
 </head>
 <body>
-<h1 class="titulo">Evaluación del Punto de Hidratación</h1>
+
+<div id="step1" class="step active">
+<h1>Información general</h1>
+
+<label>Nombre / Número del punto</label>
+<input id="nombre" class="input"/>
+
+<label>Persona a cargo</label>
+<input id="persona" class="input"/>
+
+<label>Días</label>
+<input id="dias" class="input"/>
+
+<label>Horarios</label>
+<input id="horarios" class="input"/>
+
+<label>Metros cuadrados disponibles</label>
+<input id="m2" class="input"/>
+
+<p id="capacidadTexto"></p>
+
+<button onclick="nextStep()">Siguiente</button>
+</div>
+
+
+<div id="step2" class="step">
+<h1>Confort térmico</h1>
 <div id="formulario"></div>
-<div class="resultado" id="resultado"></div>
-<button id="calcular" class="btn-final">Calcular Clasificación</button>
+<button onclick="prevStep()">Volver</button>
+<button onclick="calcular()">Calcular</button>
+</div>
+
+<div id="step3" class="step">
+<h1>Resultado</h1>
+<div id="resultado"></div>
+<button onclick="prevStep()">Volver</button>
+</div>
+
 <script src="app.js"></script>
 </body>
 </html>
