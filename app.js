@@ -5,6 +5,11 @@
 
 /* Aquí se guardarán las respuestas en tiempo real */
 let respuestas = {};
+/* DATO GENERAL ADICIONAL: SERVICIO MÉDICO */
+let datosGenerales = {
+  medico: null
+};
+
 
 /* ============================================================
    DEFINICIÓN DE BLOQUES Y PREGUNTAS
@@ -219,7 +224,19 @@ function seleccionarRespuesta(bloque, index, valor, boton) {
   boton.classList.add("seleccionado");
 }
 
+/* ============================================================
+   GUARDAR DATO GENERAL (SERVICIO MÉDICO)
+   ============================================================ */
+function setDatoGeneral(campo, valor, boton) {
+  datosGenerales[campo] = valor;
 
+  // quitar selección previa
+  let grupo = boton.parentNode.querySelectorAll("button");
+  grupo.forEach(b => b.classList.remove("seleccionado"));
+
+  // marcar botón seleccionado
+  boton.classList.add("seleccionado");
+}
 
 /* ============================================================
    NAVEGACIÓN ENTRE PANTALLAS (Siguiente y Volver)
