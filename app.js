@@ -411,37 +411,36 @@ function calcular() {
     "🟢 Buen funcionamiento";
 
   let html = `
-    <h2>${titulo}</h2>
-    <p><strong>Tipo de espacio:</strong> ${tipoEspacio}</p>
-    <p><strong>Área total:</strong> ${m2} m²</p>
-    <p><strong>Personas permitidas:</strong> ${capacidad}</p>
+  <h2>${titulo}</h2>
+  <p><strong>Tipo de espacio:</strong> ${tipoEspacio}</p>
+  <p><strong>Área total:</strong> ${m2} m²</p>
+  <p><strong>Personas permitidas:</strong> ${capacidad}</p>
 
-    <hr>
+  <hr>
 
-    <h3>Datos generales del relevamiento</h3>
-    <p><strong>Punto:</strong> ${document.getElementById("nombre").value}</p>
-    <p><strong>Responsable del relevamiento:</strong> ${document.getElementById("persona").value}</p>
-    <p><strong>Días:</strong> ${document.getElementById("dias").value}</p>
-    <p><strong>Horarios:</strong> ${document.getElementById("horarios").value}</p>
-    <p><strong>Servicio médico (107):</strong> ${datosGenerales.medico ? datosGenerales.medico.toUpperCase() : "NO DECLARADO"}</p>
+  <h3>Datos generales del relevamiento</h3>
+  <p><strong>Punto:</strong> ${document.getElementById("nombre").value}</p>
+  <p><strong>Responsable del relevamiento:</strong> ${document.getElementById("persona").value}</p>
+  <p><strong>Días:</strong> ${document.getElementById("dias").value}</p>
+  <p><strong>Horarios:</strong> ${document.getElementById("horarios").value}</p>
+  <p><strong>Servicio médico (107):</strong> ${datosGenerales.medico ? datosGenerales.medico.toUpperCase() : "NO DECLARADO"}</p>
 
-    <hr>
+  <hr>
 
-   html += `
-<hr>
-<h3>Resumen de clasificación</h3>
-<ul>
-  <li><strong>Muy graves (🚨):</strong> ${muy}</li>
-  <li><strong>Graves (🔴):</strong> ${gra}</li>
-  <li><strong>Medias (🟠):</strong> ${med}</li>
-  <li><strong>Leves (🟡):</strong> ${lev}</li>
-  <li><strong>Buenas (🟢):</strong> ${Object.keys(respuestas).length - (muy + gra + med + lev)}</li>
-</ul>
-<hr>
-<h3>Resumen por bloque</h3>
+  <h3>Resumen de clasificación</h3>
+  <ul>
+    <li><strong>Muy graves (🚨):</strong> ${muy}</li>
+    <li><strong>Graves (🔴):</strong> ${gra}</li>
+    <li><strong>Medias (🟠):</strong> ${med}</li>
+    <li><strong>Leves (🟡):</strong> ${lev}</li>
+    <li><strong>Buenas (🟢):</strong> ${Object.keys(respuestas).length - (muy + gra + med + lev)}</li>
+  </ul>
+
+  <hr>
+
+  <h3>Resumen por bloque</h3>
 `;
-
-  const nombresBloques = {
+   const nombresBloques = {
     form2: "Bloque 2 – Confort térmico",
     form3: "Bloque 3 – Disposiciones edilicias",
     form4: "Bloque 4 – Envolvente térmica",
