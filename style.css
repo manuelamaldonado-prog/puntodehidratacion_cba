@@ -8,43 +8,23 @@ body {
   line-height: 1.5;
 }
 
-h1 {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
-h2 {
-  font-size: 22px;
-  font-weight: 700;
-}
-
+h1 { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+h2 { font-size: 22px; font-weight: 700; }
 h3 {
   margin-top: 25px;
   font-weight: 600;
   border-bottom: 2px solid #ddd;
   padding-bottom: 4px;
 }
-
 h4 {
   margin-top: 15px;
   font-weight: 600;
   color: #444;
 }
 
-p {
-  margin: 6px 0;
-}
-
 /* STEPS */
-.step {
-  display: none;
-  padding: 20px;
-}
-
-.step.active {
-  display: block;
-}
+.step { display: none; padding: 20px; }
+.step.active { display: block; }
 
 /* INPUTS */
 label {
@@ -63,7 +43,7 @@ label {
   margin-bottom: 15px;
 }
 
-/* BOTONES DE NAVEGACIÓN (BOTÓN C) */
+/* BOTONES DE NAVEGACIÓN */
 .next-btn, .back-btn {
   width: 100%;
   padding: 12px;
@@ -75,17 +55,10 @@ label {
   cursor: pointer;
 }
 
-.next-btn {
-  background: #4F9CF9;   /* Celeste opción C */
-  color: white;
-}
+.next-btn { background: #4F9CF9; color: white; }
+.back-btn { background: #e4e4e4; color: #333; }
 
-.back-btn {
-  background: #e4e4e4;
-  color: #333;
-}
-
-/* BOTONES SI/NO */
+/* PREGUNTAS */
 .pregunta {
   margin-bottom: 25px;
   padding: 15px;
@@ -93,9 +66,7 @@ label {
   background: #f7f7f7;
 }
 
-.pregunta strong {
-  font-size: 17px;
-}
+.pregunta strong { font-size: 17px; }
 
 .explica {
   font-size: 14px;
@@ -103,104 +74,44 @@ label {
   margin-top: 5px;
 }
 
-/* Contenedor de botones SI/NO */
+/* Buttons sí/no */
 .opciones {
   display: flex;
   gap: 10px;
   margin-top: 10px;
 }
 
-/* Base */
 .btn-resp {
   flex: 1;
   padding: 12px;
-  text-align: center;
   border-radius: 10px;
   font-weight: 600;
-  border: none;
-  font-size: 16px;
+  border: 2px solid #ddd;
+  background: white;
   cursor: pointer;
-  transition: transform 0.1s ease-in-out;
 }
 
-/* ANIMACIÓN */
-.btn-resp:active {
-  transform: scale(0.97);
-}
-
-/* SI (bueno) */
-.btn-si {
-  background: #2ecc71;
-  color: white;
-}
-
-/* NO — Colores por gravedad */
-.btn-no-muygrave {
-  background: #ff4d4d;
-  color: white;
-}
-
-.btn-no-grave {
-  background: #ff6961;
-  color: white;
-}
-
-.btn-no-medio {
-  background: #f5a623;
-  color: white;
-}
-
-.btn-no-leve {
-  background: #fbd55b;
-  color: #111;
-}
-
-/* Seleccionado */
-.seleccionado {
+.btn-resp.seleccionado {
   outline: 3px solid #000;
-  transform: scale(0.98);
 }
 
-/* RESULTADOS */
-#resultado {
-  padding: 10px;
-  margin-top: 10px;
-}
+/* Colores cuando se seleccionan */
+.btn-si.seleccionado     { background: #2ecc71; color: white; }
+.btn-no-muygrave.seleccionado { background: #ff4d4d; color: white; }
+.btn-no-grave.seleccionado    { background: #ff6961; color: white; }
+.btn-no-medio.seleccionado    { background: #f5a623; color: white; }
+.btn-no-leve.seleccionado     { background: #fbd55b; color: #111; }
 
-hr {
-  margin: 20px 0;
-  border: none;
-  border-bottom: 2px solid #ddd;
-}
-
-/* PDF BUTTON */
-.print-btn {
-  margin-top: 20px;
-}
-
-/* RESPONSIVE */
-@media (max-width: 600px) {
-  h1 { font-size: 22px; }
-  h2 { font-size: 20px; }
-  .next-btn, .back-btn { font-size: 16px; }
-}
-.yesno-container {
-  display: flex;
-  gap: 10px;
-  margin: 10px 0 20px 0;
-}
-
+/* Datos generales botón */
+.yesno-container { display: flex; gap: 10px; margin-bottom: 20px; }
 .yesno {
-  background: #fff;
+  flex: 1;
+  padding: 10px;
   border: 2px solid #ccc;
-  padding: 10px 18px;
   border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
+  background: white;
 }
-
-.yesno.active {
+.yesno.seleccionado {
   background: #2ecc71;
-  border-color: #27ae60;
   color: white;
 }
