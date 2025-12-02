@@ -1,1 +1,16 @@
-body{font-family:'Public Sans',sans-serif;padding:20px;}.step{display:none;}.step.active{display:block;}button{padding:10px 20px;margin:10px 0;}
+
+body { font-family: 'Public Sans', sans-serif; padding:20px; background:white; }
+.step{display:none;} .step.active{display:block;}
+.input{width:100%; padding:10px; margin-bottom:12px; border:1px solid #ddd; border-radius:6px;}
+.next-btn, .back-btn{padding:12px 18px; border:none; border-radius:6px; font-weight:600; cursor:pointer; margin-top:15px;}
+.next-btn{background:#4F9CF9;color:white;}
+.back-btn{background:#ddd;}
+.question{font-weight:600; margin-top:20px;}
+.description{font-size:14px; color:#444; margin-bottom:8px;}
+.btn-group{display:flex; gap:10px; margin-bottom:15px;}
+.btn-group button{flex:1; padding:12px; border-radius:6px; border:1px solid #ccc; background:#f5f5f5; font-weight:600;}
+.btn-group button.selected{background:#b8e6b8; border-color:#3a9b3a;}
+.no.muygrave.selected{background:#ffb3b3; border-color:#ff0000;}
+.no.grave.selected{background:#ffc8c8; border-color:#ff4d4d;}
+.no.medio.selected{background:#ffe0b3; border-color:#ff9900;}
+.no.leve.selected{background:#fff4b3; border-color:#e6c300;}
