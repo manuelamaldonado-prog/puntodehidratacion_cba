@@ -1,14 +1,9 @@
 /* ============================================================
-   APP.JS — PARTE A
-   DEFINICIÓN DE BLOQUES Y PREGUNTAS
-   ============================================================ */
+   APP.JS — DEFINICIONES GENERALES
+=========================================================== */
 
-/* Aquí se guardarán las respuestas en tiempo real */
 let respuestas = {};
-/* Datos generales adicionales */
-let datosGenerales = {
-  medico: null
-};
+let datosGenerales = { medico: null };
 
 /* ============================================================
    DEFINICIÓN DE BLOQUES Y PREGUNTAS
@@ -16,9 +11,7 @@ let datosGenerales = {
 
 const bloques = {
 
-  /* ------------------------------------------------------------
-     BLOQUE 2 – CONFORT TÉRMICO
-  ------------------------------------------------------------ */
+  /* BLOQUE 2 – CONFORT TÉRMICO */
   form2: [
     {
       t: "¿El recinto cuenta con temperatura estable?",
@@ -42,9 +35,7 @@ const bloques = {
     }
   ],
 
-  /* ------------------------------------------------------------
-     BLOQUE 3 – DISPOSICIONES EDILICIAS
-  ------------------------------------------------------------ */
+  /* BLOQUE 3 – DISPOSICIONES EDILICIAS */
   form3: [
     {
       t: "¿La fachada principal está orientada al norte?",
@@ -63,30 +54,26 @@ const bloques = {
     }
   ],
 
-  /* ------------------------------------------------------------
-     BLOQUE 4 – ENVOLVENTE TÉRMICA
-  ------------------------------------------------------------ */
+  /* BLOQUE 4 – ENVOLVENTE TÉRMICA */
   form4: [
     {
-      t: "¿El material del techo evita la trasnferencia de calor al recinto?",
+      t: "¿El material del techo evita la trasferencia de calor al recinto?",
       d: "Ejemplo: losa, cieloraso aislante, techo de chapa con aislación térmica, etc.",
-      g: "grave"    // SI = bueno, NO = grave
+      g: "grave"
     },
     {
       t: "¿Los muros exteriores están pintados en color claro?",
       d: "Los colores claros reflejan la radiación solar.",
-      g: "grave"    // SI = bueno, NO = grave
+      g: "grave"
     },
     {
       t: "¿El recinto posee planta superior?",
       d: "La planta superior reduce la transferencia térmica directa desde la cubierta.",
-      g: "medio"    // depende de combinación con techo
+      g: "medio"
     }
   ],
 
-  /* ------------------------------------------------------------
-     BLOQUE 5 – PROTECCIONES PASIVAS
-  ------------------------------------------------------------ */
+  /* BLOQUE 5 – PROTECCIONES PASIVAS */
   form5: [
     {
       t: "¿Posee toldos, cortinas o elementos de sombra?",
@@ -95,9 +82,7 @@ const bloques = {
     }
   ],
 
-  /* ------------------------------------------------------------
-     BLOQUE 6 – DISEÑO
-  ------------------------------------------------------------ */
+  /* BLOQUE 6 – DISEÑO */
   form6: [
     {
       t: "¿Cuenta con aberturas altas para permitir la salida del aire caliente?",
@@ -111,19 +96,17 @@ const bloques = {
     }
   ],
 
-  /* ------------------------------------------------------------
-     BLOQUE 7 – FUNCIONES Y PROVISIONAMIENTO
-  ------------------------------------------------------------ */
+  /* BLOQUE 7 – SERVICIOS */
   form7: [
     {
       t: "¿El punto cuenta con disponibilidad de agua potable?",
       d: "Agua apta para consumo humano.",
       g: "muygrave"
     },
-   {
+    {
       t: "¿El punto cuenta con disponibilidad de agua fría?",
       d: "Agua fría proveniente de heladera, dispenser o botellón refrigerado.",
-      g: "medio"  // NO = medio automático
+      g: "medio"
     },
     {
       t: "¿Se dispone de un área de reposo o espera?",
@@ -138,17 +121,6 @@ const bloques = {
   ]
 };
 
-/* ============================================================
-   COLORES ASOCIADOS A RESULTADOS
-=========================================================== */
-
-const colores = {
-  si: "#2ecc71",
-  muygrave: "#ff4d4d",
-  grave: "#ff6961",
-  medio: "#f5a623",
-  leve: "#fbd55b"
-};
 
 /* ============================================================
    GENERACIÓN DE FORMULARIOS
@@ -187,6 +159,7 @@ function generarFormularios() {
 
 generarFormularios();
 
+
 /* ============================================================
    GUARDAR RESPUESTAS
 =========================================================== */
@@ -201,9 +174,11 @@ function seleccionarRespuesta(bloque, index, valor, boton) {
   boton.classList.add("seleccionado");
 }
 
+
 /* ============================================================
-   GUARDAR DATOS GENERALES
+   DATOS GENERALES
 =========================================================== */
+
 function setDatoGeneral(campo, valor, boton) {
   datosGenerales[campo] = valor;
 
@@ -213,8 +188,9 @@ function setDatoGeneral(campo, valor, boton) {
   boton.classList.add("seleccionado");
 }
 
+
 /* ============================================================
-   NAVEGACIÓN
+   NAVEGACIÓN ENTRE PÁGINAS
 =========================================================== */
 
 let pasoActual = 1;
@@ -228,6 +204,7 @@ function mostrarPaso(n) {
 function nextStep() { pasoActual++; mostrarPaso(pasoActual); }
 function prevStep() { pasoActual--; mostrarPaso(pasoActual); }
 
+
 /* ============================================================
    CAPACIDAD EN TIEMPO REAL
 =========================================================== */
@@ -235,114 +212,99 @@ function prevStep() { pasoActual--; mostrarPaso(pasoActual); }
 document.getElementById("m2").addEventListener("input", () => {
   let m2 = parseFloat(document.getElementById("m2").value) || 0;
   let capacidad = Math.floor(m2 / 3.5);
-
   document.getElementById("capacidadTexto").innerHTML =
     `<strong>Personas permitidas:</strong> ${capacidad}`;
 });
 
+
 /* ============================================================
-   LÓGICAS ESPECIALES
+   LÓGICAS ESPECIALES DE CLASIFICACIÓN
 =========================================================== */
 
 function obtenerGravedadFinal(bloque, index, valor) {
   let preg = bloques[bloque][index];
   let base = preg.g;
 
-  /* Agua potable (form7_0) */
-  if (bloque === "form7" && index === 0) {
+  /* Agua potable */
+  if (bloque === "form7" && index === 0)
     return valor === "si" ? "bueno" : "muygrave";
-  }
 
-  /* Agua fría (form7_1) */
-  if (bloque === "form7" && index === 1) {
+  /* Agua fría */
+  if (bloque === "form7" && index === 1)
     return valor === "si" ? "bueno" : "medio";
-  }
 
-  /* Aire + ventilador */
+  /* Aire + ventiladores */
   if (bloque === "form2" && (index === 2 || index === 3)) {
-    let aa = respuestas["form2_2"];   // Pregunta AA
-    let vent = respuestas["form2_3"]; // Pregunta ventiladores
+    let aa = respuestas["form2_2"];
+    let vent = respuestas["form2_3"];
 
     if (aa && vent) {
-      // NO + SI
+
       if (aa === "no" && vent === "si") {
-        if (index === 2) return "medio"; // aire = medio
-        if (index === 3) return "bueno"; // ventilador = bueno
+        if (index === 2) return "medio";
+        if (index === 3) return "bueno";
       }
 
-      // SI + SI
-      if (aa === "si" && vent === "si") {
-        return "bueno";
-      }
+      if (aa === "si" && vent === "si") return "bueno";
 
-      // SI + NO
       if (aa === "si" && vent === "no") {
-        if (index === 2) return "bueno"; // aire = bueno
-        if (index === 3) return "leve";  // ventilador = leve
+        if (index === 2) return "bueno";
+        if (index === 3) return "leve";
       }
 
-      // NO + NO
       if (aa === "no" && vent === "no") {
-        if (index === 2) return "medio"; // aire = medio
-        if (index === 3) return "grave"; // ventilador = grave
+        if (index === 2) return "medio";
+        if (index === 3) return "grave";
       }
     }
   }
 
-  /* Techo + planta superior (form4_0 y form4_2) */
+  /* Techo + planta superior */
   if (bloque === "form4" && index === 2) {
     let techo = respuestas["form4_0"];
     let planta = respuestas["form4_2"];
 
     if (techo && planta) {
-      // Techo SI transfiere calor
+
       if (techo === "no") {
         if (planta === "no") return "grave";
         if (planta === "si") return "leve";
       }
 
-      // Techo NO transfiere calor
       if (techo === "si") {
-        if (planta === "no") return "bueno";
-        if (planta === "si") return "bueno";
+        return "bueno";
       }
     }
   }
 
-  /* Muros claros (form4_1) */
-  if (bloque === "form4" && index === 1) {
+  /* Muros claros */
+  if (bloque === "form4" && index === 1)
     return valor === "si" ? "bueno" : "grave";
-  }
 
-  /* Protecciones pasivas (form5_0, form5_1, form5_2) */
-  if (bloque === "form5") {
+  /* Protecciones pasivas */
+  if (bloque === "form5")
     return valor === "si" ? "bueno" : "leve";
-  }
 
-  /* Regla general */
-  if (valor === "si") return "bueno";
-  return base;
+  /* Regla final */
+  return valor === "si" ? "bueno" : base;
 }
+
+
 /* ============================================================
-   CLASIFICACIÓN FINAL
+   CLASIFICACIÓN GENERAL DEL PUNTO
 =========================================================== */
 
 function clasificarPunto() {
   let muy = 0, gra = 0, med = 0, lev = 0;
 
-  let aguaFriaNo = respuestas["form2_2"] === "no";
-  let aguaPotNo  = respuestas["form7_0"] === "no";
-  let aire = respuestas["form2_3"] === "si";
+  let aguaPotNo = respuestas["form7_0"] === "no";
+  let aa = respuestas["form2_2"] === "si";
 
   let tipoEspacio = "";
 
-  if (aguaPotNo) {
-    tipoEspacio = "NO APTO – No posee agua potable";
-  } else if (aire) {
-    tipoEspacio = "Área climatizada";
-  } else if (!aguaFriaNo) {
-    tipoEspacio = "Punto de hidratación";
-  }
+  if (aguaPotNo) tipoEspacio = "NO APTO – No posee agua potable";
+  else if (aa) tipoEspacio = "Área climatizada";
+  else tipoEspacio = "Punto de hidratación";
 
   Object.keys(respuestas).forEach(key => {
     let [b, idx] = key.split("_");
@@ -357,7 +319,8 @@ function clasificarPunto() {
     }
   });
 
-  if (aguaPotNo) return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
+  if (aguaPotNo)
+    return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
 
   if (muy >= 1 || gra >= 3 || med >= 5 || lev >= 7)
     return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
@@ -368,8 +331,9 @@ function clasificarPunto() {
   return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
 }
 
+
 /* ============================================================
-   GENERAR INFORME
+   GENERAR INFORME FINAL
 =========================================================== */
 
 function calcular() {
@@ -380,69 +344,43 @@ function calcular() {
   let m2 = parseFloat(document.getElementById("m2").value) || 0;
   let capacidad = Math.floor(m2 / 3.5);
 
-  let prioridades = [];
-
-  Object.keys(respuestas).forEach(key => {
-    let [b, idx] = key.split("_");
-    let valor = respuestas[key];
-    let gravedadFinal = obtenerGravedadFinal(b, parseInt(idx), valor);
-
-    if (valor === "no") {
-      let emoji =
-        gravedadFinal === "muygrave" ? "🚨" :
-        gravedadFinal === "grave"    ? "🔴" :
-        gravedadFinal === "medio"    ? "🟠" :
-        gravedadFinal === "leve"     ? "🟡" : "";
-
-      prioridades.push({
-        gravedad: gravedadFinal,
-        texto: bloques[b][idx].t,
-        emoji
-      });
-    }
-  });
-
-  const orden = { muygrave: 1, grave: 2, medio: 3, leve: 4, bueno: 5 };
-  prioridades.sort((a, b) => orden[a.gravedad] - orden[b.gravedad]);
-
   let titulo =
     estado === "rojo" ? "🟥 Condiciones críticas" :
     estado === "amarillo" ? "🟡 Requiere mejoras" :
     "🟢 Buen funcionamiento";
 
   let html = `
-     <h2>${titulo}</h2>
-     <p><strong>Tipo de espacio:</strong> ${tipoEspacio}</p>
-     <p><strong>Área total:</strong> ${m2} m²</p>
-     <p><strong>Personas permitidas:</strong> ${capacidad}</p>
+    <h2>${titulo}</h2>
+    <p><strong>Tipo de espacio:</strong> ${tipoEspacio}</p>
+    <p><strong>Área total:</strong> ${m2} m²</p>
+    <p><strong>Personas permitidas:</strong> ${capacidad}</p>
 
-     <hr>
+    <hr>
 
-     <h3>Datos generales del relevamiento</h3>
-     <p><strong>Punto:</strong> ${document.getElementById("nombre").value}</p>
-     <p><strong>Responsable del relevamiento:</strong> ${document.getElementById("persona").value}</p>
-     <p><strong>Días:</strong> ${document.getElementById("dias").value}</p>
-     <p><strong>Horarios:</strong> ${document.getElementById("horarios").value}</p>
-     <p><strong>Servicio médico (107):</strong> ${datosGenerales.medico ? datosGenerales.medico.toUpperCase() : "NO DECLARADO"}</p>
-   
-     <hr>
-   
-     <h3>Resumen de clasificación</h3>
-   `;
-     <ul>
-    <li><strong>Muy graves (🚨):</strong> ${muy}</li>
-    <li><strong>Graves (🔴):</strong> ${gra}</li>
-    <li><strong>Medias (🟠):</strong> ${med}</li>
-    <li><strong>Leves (🟡):</strong> ${lev}</li>
-    <li><strong>Buenas (🟢):</strong> ${Object.keys(respuestas).length - (muy + gra + med + lev)}</li>
-  </ul>
+    <h3>Datos generales del relevamiento</h3>
+    <p><strong>Punto:</strong> ${document.getElementById("nombre").value}</p>
+    <p><strong>Responsable del relevamiento:</strong> ${document.getElementById("persona").value}</p>
+    <p><strong>Días:</strong> ${document.getElementById("dias").value}</p>
+    <p><strong>Horarios:</strong> ${document.getElementById("horarios").value}</p>
+    <p><strong>Servicio médico (107):</strong> ${datosGenerales.medico ? datosGenerales.medico.toUpperCase() : "NO DECLARADO"}</p>
 
-  <hr>
+    <hr>
 
-  <h3>Resumen por bloque</h3>
-`;
+    <h3>Resumen de clasificación</h3>
+    <ul>
+      <li><strong>Muy graves (🚨):</strong> ${muy}</li>
+      <li><strong>Graves (🔴):</strong> ${gra}</li>
+      <li><strong>Medias (🟠):</strong> ${med}</li>
+      <li><strong>Leves (🟡):</strong> ${lev}</li>
+      <li><strong>Buenas (🟢):</strong> ${Object.keys(respuestas).length - (muy + gra + med + lev)}</li>
+    </ul>
 
-const nombresBloques = {
+    <hr>
+
+    <h3>Resumen por bloque</h3>
+  `;
+
+  const nombresBloques = {
     form2: "Bloque 2 – Confort térmico",
     form3: "Bloque 3 – Disposiciones edilicias",
     form4: "Bloque 4 – Envolvente térmica",
@@ -484,9 +422,9 @@ const nombresBloques = {
   });
 
   document.getElementById("resultado").innerHTML = html;
-
   nextStep();
 }
+
 
 /* ============================================================
    PDF
@@ -514,6 +452,10 @@ function descargarPDF() {
     </head>
     <body>${contenido}</body></html>
   `);
+
+  ventana.document.close();
+  ventana.print();
+}
 
   ventana.document.close();
   ventana.print();
