@@ -3,59 +3,124 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Punto de Hidratación</title>
+<title>Punto de Hidratación CBA</title>
+
+<!-- Fuente Public Sans -->
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<!-- Estilos -->
 <link rel="stylesheet" href="style.css">
+
+<!-- PWA -->
 <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
 
+<!-- BLOQUE 1 — INFORMACIÓN GENERAL -->
 <div id="step1" class="step active">
-<h1>Información general</h1>
+<h1>Bloque 1 – Información general</h1>
+
 <label>Nombre / Número del punto</label>
-<input id="nombre" class="input"/>
-<label>Persona a cargo</label>
-<input id="persona" class="input"/>
+<input id="nombre" class="input" />
+
+<label>Persona a cargo del relevamiento</label>
+<input id="persona" class="input" />
+
 <label>Días</label>
-<input id="dias" class="input"/>
+<input id="dias" class="input" />
+
 <label>Horarios</label>
-<input id="horarios" class="input"/>
+<input id="horarios" class="input" />
+
 <label>Metros cuadrados disponibles</label>
-<input id="m2" class="input"/>
-<p id="capacidadTexto"></p>
+<input id="m2" type="number" class="input" />
+
+<p id="capacidadTexto" class="capacidad"></p>
+
 <button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
 </div>
 
-<div id="step2" class="step"><h1>Bloque 2 – Confort térmico</h1><div id="form2"></div>
-<button onclick="prevStep()" class="back-btn">← Volver</button>
-<button onclick="nextStep()" class="next-btn">Siguiente ➜</button></div>
 
-<div id="step3" class="step"><h1>Bloque 3 – Accesibilidad y orientación</h1><div id="form3"></div>
-<button onclick="prevStep()" class="back-btn">← Volver</button>
-<button onclick="nextStep()" class="next-btn">Siguiente ➜</button></div>
 
-<div id="step4" class="step"><h1>Bloque 4 – Envolvente térmica</h1><div id="form4"></div>
-<button onclick="prevStep()" class="back-btn">← Volver</button>
-<button onclick="nextStep()" class="next-btn">Siguiente ➜</button></div>
+<!-- BLOQUE 2 — CONFORT TÉRMICO -->
+<div id="step2" class="step">
+<h1>Bloque 2 – Confort térmico</h1>
+<div id="form2"></div>
 
-<div id="step5" class="step"><h1>Bloque 5 – Protecciones pasivas</h1><div id="form5"></div>
 <button onclick="prevStep()" class="back-btn">← Volver</button>
-<button onclick="nextStep()" class="next-btn">Siguiente ➜</button></div>
+<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
+</div>
 
-<div id="step6" class="step"><h1>Bloque 6 – Condiciones internas</h1><div id="form6"></div>
+
+
+<!-- BLOQUE 3 — ACCESIBILIDAD Y ORIENTACIÓN -->
+<div id="step3" class="step">
+<h1>Bloque 3 – Accesibilidad y orientación</h1>
+<div id="form3"></div>
+
 <button onclick="prevStep()" class="back-btn">← Volver</button>
-<button onclick="nextStep()" class="next-btn">Siguiente ➜</button></div>
+<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
+</div>
 
-<div id="step7" class="step"><h1>Bloque 7 – Servicios</h1><div id="form7"></div>
+
+
+<!-- BLOQUE 4 — ENVOLVENTE TÉRMICA -->
+<div id="step4" class="step">
+<h1>Bloque 4 – Envolvente térmica</h1>
+<div id="form4"></div>
+
 <button onclick="prevStep()" class="back-btn">← Volver</button>
-<button onclick="calcular()" class="next-btn">Calcular resultado</button></div>
+<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
+</div>
 
+
+
+<!-- BLOQUE 5 — PROTECCIONES PASIVAS -->
+<div id="step5" class="step">
+<h1>Bloque 5 – Protecciones pasivas</h1>
+<div id="form5"></div>
+
+<button onclick="prevStep()" class="back-btn">← Volver</button>
+<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
+</div>
+
+
+
+<!-- BLOQUE 6 — CONDICIONES INTERNAS -->
+<div id="step6" class="step">
+<h1>Bloque 6 – Condiciones internas</h1>
+<div id="form6"></div>
+
+<button onclick="prevStep()" class="back-btn">← Volver</button>
+<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
+</div>
+
+
+
+<!-- BLOQUE 7 — SERVICIOS -->
+<div id="step7" class="step">
+<h1>Bloque 7 – Servicios</h1>
+<div id="form7"></div>
+
+<button onclick="prevStep()" class="back-btn">← Volver</button>
+<button onclick="calcular()" class="next-btn">Calcular resultado</button>
+</div>
+
+
+
+<!-- RESULTADO FINAL -->
 <div id="step8" class="step">
-<h1>Resultado</h1><div id="resultado"></div>
+<h1>Resultado</h1>
+<div id="resultado"></div>
+
 <button onclick="descargarPDF()" class="next-btn">Descargar PDF</button>
 <button onclick="location.reload()" class="next-btn">Nueva evaluación</button>
 </div>
 
+
+<!-- SCRIPTS -->
 <script src="app.js"></script>
+
 </body>
 </html>
