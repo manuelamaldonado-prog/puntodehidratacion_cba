@@ -1,8 +1,9 @@
 {
-"name":"Punto de Hidratación",
-"short_name":"Hidratación",
-"start_url":"index.html",
-"display":"standalone",
-"background_color":"#ffffff",
-"theme_color":"#ffffff"
+  "name": "Punto de Hidratación CBA",
+  "short_name": "Hidratación",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4F9CF9",
+  "icons": []
 }
