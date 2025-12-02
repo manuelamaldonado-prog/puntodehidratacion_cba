@@ -344,40 +344,38 @@ function calcular() {
   let m2 = parseFloat(document.getElementById("m2").value) || 0;
   let capacidad = Math.floor(m2 / 3.5);
 
-  let titulo =
-    estado === "rojo" ? "🟥 Condiciones críticas" :
-    estado === "amarillo" ? "🟡 Requiere mejoras" :
-    "🟢 Buen funcionamiento";
-
   let html = `
-    <h2>${titulo}</h2>
-    <p><strong>Tipo de espacio:</strong> ${tipoEspacio}</p>
-    <p><strong>Área total:</strong> ${m2} m²</p>
-    <p><strong>Personas permitidas:</strong> ${capacidad}</p>
+  <h2>${estado === "rojo" ? "🟥 Condiciones críticas" :
+        estado === "amarillo" ? "🟡 Requiere mejoras" :
+        "🟢 Buen funcionamiento"}</h2>
 
-    <hr>
+  <p><strong>Tipo de espacio:</strong> ${tipoEspacio}</p>
+  <p><strong>Área total:</strong> ${m2} m²</p>
+  <p><strong>Personas permitidas:</strong> ${capacidad}</p>
 
-    <h3>Datos generales del relevamiento</h3>
-    <p><strong>Punto:</strong> ${document.getElementById("nombre").value}</p>
-    <p><strong>Responsable del relevamiento:</strong> ${document.getElementById("persona").value}</p>
-    <p><strong>Días:</strong> ${document.getElementById("dias").value}</p>
-    <p><strong>Horarios:</strong> ${document.getElementById("horarios").value}</p>
-    <p><strong>Servicio médico (107):</strong> ${datosGenerales.medico ? datosGenerales.medico.toUpperCase() : "NO DECLARADO"}</p>
+  <hr>
 
-    <hr>
+  <h3>Datos generales del relevamiento</h3>
+  <p><strong>Punto:</strong> ${document.getElementById("nombre").value}</p>
+  <p><strong>Responsable del relevamiento:</strong> ${document.getElementById("persona").value}</p>
+  <p><strong>Días:</strong> ${document.getElementById("dias").value}</p>
+  <p><strong>Horarios:</strong> ${document.getElementById("horarios").value}</p>
+  <p><strong>Servicio médico (107):</strong> ${datosGenerales.medico ? datosGenerales.medico.toUpperCase() : "NO DECLARADO"}</p>
 
-    <h3>Resumen de clasificación</h3>
-    <ul>
-      <li><strong>Muy graves (🚨):</strong> ${muy}</li>
-      <li><strong>Graves (🔴):</strong> ${gra}</li>
-      <li><strong>Medias (🟠):</strong> ${med}</li>
-      <li><strong>Leves (🟡):</strong> ${lev}</li>
-      <li><strong>Buenas (🟢):</strong> ${Object.keys(respuestas).length - (muy + gra + med + lev)}</li>
-    </ul>
+  <hr>
 
-    <hr>
+  <h3>Resumen de clasificación</h3>
+  <ul>
+    <li><strong>Muy graves (🚨):</strong> ${muy}</li>
+    <li><strong>Graves (🔴):</strong> ${gra}</li>
+    <li><strong>Medias (🟠):</strong> ${med}</li>
+    <li><strong>Leves (🟡):</strong> ${lev}</li>
+    <li><strong>Buenas (🟢):</strong> ${Object.keys(respuestas).length - (muy + gra + med + lev)}</li>
+  </ul>
 
-    <h3>Resumen por bloque</h3>
+  <hr>
+
+  <h3>Resumen por bloque</h3>
   `;
 
   const nombresBloques = {
@@ -393,6 +391,7 @@ function calcular() {
     html += `<h4>${nombresBloques[b]}</h4>`;
 
     bloques[b].forEach((pregunta, idx) => {
+
       let key = `${b}_${idx}`;
       let valor = respuestas[key];
 
@@ -405,9 +404,9 @@ function calcular() {
 
       let emoji =
         gravedad === "muygrave" ? "🚨" :
-        gravedad === "grave" ? "🔴" :
-        gravedad === "medio" ? "🟠" :
-        gravedad === "leve" ? "🟡" : "🟢";
+        gravedad === "grave"    ? "🔴" :
+        gravedad === "medio"    ? "🟠" :
+        gravedad === "leve"     ? "🟡" : "🟢";
 
       html += `
         <p>
@@ -422,6 +421,7 @@ function calcular() {
   });
 
   document.getElementById("resultado").innerHTML = html;
+
   nextStep();
 }
 
