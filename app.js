@@ -456,7 +456,3 @@ function descargarPDF() {
   ventana.document.close();
   ventana.print();
 }
-
-  ventana.document.close();
-  ventana.print();
-}
