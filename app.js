@@ -1,116 +1,187 @@
+function calcular() {
+  let muy = 0, gra = 0, med = 0, lev = 0;
 
-let currentStep=1;
-function showStep(n){
- document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
- document.getElementById('step'+n).classList.add('active');
+  // Recopilamos todas las respuestas
+  let resumenRespuestas = [];
+  let prioridades = [];
+
+  for (let key in respuestas) {
+    let block = key.split("_")[0];
+    let index = parseInt(key.split("_")[1]);
+    let pregunta = bloques[block][index];
+
+    let respuesta = respuestas[key];
+    let gravedad = pregunta.g;
+
+    // Contador
+    if (respuesta === "no") {
+      if (gravedad === "muygrave") muy++;
+      if (gravedad === "grave") gra++;
+      if (gravedad === "medio") med++;
+      if (gravedad === "leve") lev++;
+    }
+
+    // Emoji según gravedad
+    let emoji = "";
+    if (respuesta === "si") emoji = "";
+    else {
+      if (gravedad === "muygrave") emoji = "🚨";
+      if (gravedad === "grave") emoji = "🔴";
+      if (gravedad === "medio") emoji = "🟠";
+      if (gravedad === "leve") emoji = "🟡";
+    }
+
+    // Texto visible de respuesta
+    let textoRespuesta = `
+      <p><strong>${pregunta.t}</strong><br>
+      Respuesta: ${respuesta.toUpperCase()} 
+      ${respuesta === "no" ? `– ${gravedad.toUpperCase()} ${emoji}` : ""}
+      <br><small>${pregunta.d}</small></p>
+    `;
+
+    resumenRespuestas.push({ block, html: textoRespuesta });
+
+    // Para la sección "Medidas urgentes"
+    if (respuesta === "no") {
+      prioridades.push({
+        gravedad,
+        emoji,
+        texto: `${pregunta.t} — ${gravedad.toUpperCase()} ${emoji}`
+      });
+    }
+  }
+
+  // Determinar estado general
+  let estado = "";
+  if (muy >= 1 || gra >= 3 || med >= 5 || lev >= 7)
+    estado = "🔴 ROJO – Condiciones críticas";
+  else if (muy === 0 && gra <= 1 && med <= 2 && lev <= 3)
+    estado = "🟢 VERDE – Buen funcionamiento";
+  else
+    estado = "🟡 AMARILLO – Requiere mejoras";
+
+  // Cálculo de capacidad
+  let m2 = parseFloat(document.getElementById("m2").value) || 0;
+  let capacidad = Math.floor(m2 / 3.5);
+
+  // Ordenar las prioridades (muygrave → grave → medio → leve)
+  const orden = { muygrave: 1, grave: 2, medio: 3, leve: 4 };
+  prioridades.sort((a, b) => orden[a.gravedad] - orden[b.gravedad]);
+
+  // Generar HTML final por bloques
+  let htmlFinal = `
+    <h2>${estado}</h2>
+    <p><strong>Capacidad permitida:</strong> ${capacidad} personas</p>
+    <p><strong>Área total:</strong> ${m2} m²</p>
+
+    <hr>
+
+    <h3>Datos generales</h3>
+    <p><strong>Punto:</strong> ${document.getElementById("nombre").value}</p>
+    <p><strong>Responsable:</strong> ${document.getElementById("persona").value}</p>
+    <p><strong>Días:</strong> ${document.getElementById("dias").value}</p>
+    <p><strong>Horarios:</strong> ${document.getElementById("horarios").value}</p>
+
+    <hr>
+
+    <h3>Medidas urgentes</h3>
+  `;
+
+  if (prioridades.length === 0) {
+    htmlFinal += `<p>No hay medidas urgentes.</p>`;
+  } else {
+    prioridades.forEach(p => {
+      htmlFinal += `<p>• ${p.texto}</p>`;
+    });
+  }
+
+  htmlFinal += `<hr><h3>Respuestas por bloque</h3>`;
+
+  // Separar por bloques con títulos
+  const nombresBloques = {
+    form2: "Bloque 2 – Confort térmico",
+    form3: "Bloque 3 – Accesibilidad y orientación",
+    form4: "Bloque 4 – Envolvente térmica",
+    form5: "Bloque 5 – Protecciones pasivas",
+    form6: "Bloque 6 – Condiciones internas",
+    form7: "Bloque 7 – Servicios"
+  };
+
+  Object.keys(bloques).forEach(id => {
+    htmlFinal += `<h4>${nombresBloques[id]}</h4>`;
+    resumenRespuestas
+      .filter(r => r.block === id)
+      .forEach(r => htmlFinal += r.html);
+    htmlFinal += `<hr>`;
+  });
+
+  // Insertar todo en pantalla
+  document.getElementById("resultado").innerHTML = htmlFinal;
+
+  // Enviar a GSheets
+  fetch(
+    "https://script.google.com/macros/s/AKfycbwcHYLpLAtWFro4U0G3sWRDJAqY0kA61pS5ZKL3CdfsCTwXBc8yLjJ9TsGsOBY5uwJ_/exec",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        nombre: document.getElementById("nombre").value,
+        persona: document.getElementById("persona").value,
+        dias: document.getElementById("dias").value,
+        horarios: document.getElementById("horarios").value,
+        m2,
+        capacidad,
+        estado,
+        respuestas,
+        muygrave: muy,
+        grave: gra,
+        medio: med,
+        leve: lev
+      }),
+      headers: { "Content-Type": "application/json" }
+    }
+  );
+
+  nextStep();
 }
-function nextStep(){ currentStep++; showStep(currentStep); }
-function prevStep(){ currentStep--; showStep(currentStep); }
 
-document.getElementById("m2").addEventListener("input", ()=>{
- let m2=parseFloat(document.getElementById("m2").value)||0;
- let cap=Math.floor(m2/3.5);
- document.getElementById("capacidadTexto").innerText="Capacidad: "+cap+" personas";
-});
+function descargarPDF() {
+  const contenido = document.getElementById("resultado").innerHTML;
 
-const bloques = {
-  form2: [
-    {t:"¿Temperatura interior estable?",d:"Entre 25-28°C",g:"muygrave"},
-    {t:"¿Ventilación cruzada?",d:"3-6 renovaciones/h",g:"muygrave"},
-    {t:"¿Aire acondicionado?",d:"Debe estar a 24°C",g:"grave"},
-    {t:"¿Ventiladores?",d:"Suficientes para el espacio",g:"medio"},
-  ],
-  form3: [
-    {t:"¿Orientación norte?",d:"Aprovecha radiación invernal",g:"medio"},
-    {t:"¿Pocas aberturas al oeste?",d:"Evita sobrecalentamiento",g:"leve"},
-    {t:"¿Accesibilidad PCD?",d:"Rampas/tipos de acceso",g:"muygrave"}
-  ],
-  form4: [
-    {t:"Mampostería color claro",d:"Reduce absorción térmica",g:"grave"},
-    {t:"Techo color claro",d:"Reduce carga térmica",g:"grave"},
-    {t:"Aislación térmica",d:"Evita ganancia de calor",g:"grave"},
-    {t:"Altura o planta superior",d:"Mejora confort",g:"medio"}
-  ],
-  form5: [
-    {t:"Aleros/toldos/cortinas",d:"Protección solar",g:"medio"},
-    {t:"Vegetación norte",d:"Sombra regulada",g:"leve"},
-    {t:"Vegetación oeste",d:"Evita sol caliente",g:"leve"}
-  ],
-  form6: [
-    {t:"Aberturas altas",d:"Salida del aire caliente",g:"medio"},
-    {t:"Tela mosquitera",d:"Evita insectos",g:"leve"}
-  ],
-  form7: [
-    {t:"Agua potable",d:"Debe ser segura",g:"muygrave"},
-    {t:"Agua fresca",d:"Debe mantenerse fría",g:"grave"},
-    {t:"Equipamiento de reposo",d:"Debe ser adecuado",g:"medio"}
-  ]
-};
+  const ventana = window.open("", "_blank");
+  ventana.document.write(`
+    <html>
+      <head>
+        <title>Informe Punto de Hidratación</title>
+        <style>
+          body {
+            font-family: 'Public Sans', sans-serif;
+            padding: 20px;
+            color: #222;
+            line-height: 1.5;
+          }
+          h2 {
+            margin-top: 0;
+          }
+          h3 {
+            margin-top: 25px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 4px;
+          }
+          h4 {
+            margin-top: 20px;
+            color: #444;
+          }
+          p {
+            margin: 6px 0;
+          }
+        </style>
+      </head>
+      <body>
+        ${contenido}
+      </body>
+    </html>
+  `);
 
-let respuestas={};
-
-function renderBlock(id){
- let cont=document.getElementById(id);
- bloques[id].forEach((p,i)=>{
-   let div=document.createElement("div");
-   div.innerHTML=`
-   <div class='question'>${p.t}</div>
-   <div class='description'>${p.d}</div>
-   <div class='btn-group'>
-     <button class='si' onclick="seleccionar('${id}',${i},'si',this)">SI</button>
-     <button class='no ${p.g}' onclick="seleccionar('${id}',${i},'no',this)">NO</button>
-   </div>`;
-   cont.appendChild(div);
- });
-}
-
-Object.keys(bloques).forEach(renderBlock);
-
-function seleccionar(bloque,i,val,btn){
- respuestas[bloque+"_"+i]=val;
- btn.classList.add("selected");
- let siblings=btn.parentNode.querySelectorAll("button");
- siblings.forEach(b=>{ if(b!==btn) b.classList.remove("selected"); });
-}
-
-function calcular(){
- let muy=0,gra=0,med=0,lev=0;
-
- for(let key in respuestas){
-   if(respuestas[key]==="no"){
-     let block=key.split("_")[0];
-     let index=parseInt(key.split("_")[1]);
-     let grav=bloques[block][index].g;
-     if(grav==="muygrave")muy++;
-     if(grav==="grave")gra++;
-     if(grav==="medio")med++;
-     if(grav==="leve")lev++;
-   }
- }
-
- let estado="";
- if(muy>=1||gra>=3||med>=5||lev>=7) estado="🔴 ROJO";
- else if(muy===0&&gra<=1&&med<=2&&lev<=3) estado="🟢 VERDE";
- else estado="🟡 AMARILLO";
-
- document.getElementById("resultado").innerText=estado;
-
- let m2=parseFloat(document.getElementById("m2").value)||0;
- let cap=Math.floor(m2/3.5);
-
- fetch("https://script.google.com/macros/s/AKfycbwcHYLpLAtWFro4U0G3sWRDJAqY0kA61pS5ZKL3CdfsCTwXBc8yLjJ9TsGsOBY5uwJ_/exec",{
-   method:"POST",
-   body:JSON.stringify({
-     nombre:document.getElementById("nombre").value,
-     persona:document.getElementById("persona").value,
-     dias:document.getElementById("dias").value,
-     horarios:document.getElementById("horarios").value,
-     m2,capacidad:cap,
-     estado,respuestas,
-     muygrave:muy,grave:gra,medio:med,leve:lev
-   }),
-   headers:{"Content-Type":"application/json"}
- });
-
- nextStep();
+  ventana.document.close();
+  ventana.print();
 }
