@@ -184,3 +184,23 @@ hr {
   h2 { font-size: 20px; }
   .next-btn, .back-btn { font-size: 16px; }
 }
+.yesno-container {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0 20px 0;
+}
+
+.yesno {
+  background: #fff;
+  border: 2px solid #ccc;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.yesno.active {
+  background: #2ecc71;
+  border-color: #27ae60;
+  color: white;
+}
