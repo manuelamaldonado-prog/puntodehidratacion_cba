@@ -407,13 +407,6 @@ function calcular() {
     estado === "amarillo" ? "🟡 Requiere mejoras" :
     "🟢 Buen funcionamiento";
 
-  let recomendaciones =
-    estado === "rojo"
-      ? "Para habilitar este punto deben resolverse las MEDIDAS GRAVES y MUY GRAVES."
-      : estado === "amarillo"
-      ? "Para pasar a verde deben resolverse las MEDIDAS MEDIAS y LEVES."
-      : "Este punto es apto y se recomienda mantener sus condiciones actuales.";
-
   let html = `
     <h2>${titulo}</h2>
     <p><strong>Tipo de espacio:</strong> ${tipoEspacio}</p>
