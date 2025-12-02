@@ -68,9 +68,9 @@ const bloques = {
   ------------------------------------------------------------ */
   form4: [
     {
-      t: "¿El material del techo transfiere calor al recinto?",
-      d: "Ejemplo: chapa, madera sin aislación, fibrocemento.",
-      g: "grave"    // SI = grave, NO = bueno
+      t: "¿El material del techo evita la trasnferencia de calor al recinto?",
+      d: "Ejemplo: losa, cieloraso aislante, techo de chapa con aislación térmica, etc.",
+      g: "grave"    // SI = bueno, NO = grave
     },
     {
       t: "¿Los muros exteriores están pintados en color claro?",
@@ -295,15 +295,15 @@ function obtenerGravedadFinal(bloque, index, valor) {
     let planta = respuestas["form4_2"];
 
     if (techo && planta) {
-      // Techo NO transfiere calor
+      // Techo SI transfiere calor
       if (techo === "no") {
-        if (planta === "no") return "medio";
-        if (planta === "si") return "bueno";
+        if (planta === "no") return "grave";
+        if (planta === "si") return "leve";
       }
 
-      // Techo SI transfiere calor
+      // Techo NO transfiere calor
       if (techo === "si") {
-        if (planta === "no") return "grave";
+        if (planta === "no") return "bueno";
         if (planta === "si") return "bueno";
       }
     }
