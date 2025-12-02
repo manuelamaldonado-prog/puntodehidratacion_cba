@@ -38,10 +38,14 @@
 
 <p id="capacidadTexto" class="capacidad"></p>
 
-<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
+<label>Disponibilidad de servicio médico (107)</label>
+<div class="yesno-container">
+    <button onclick="setDatoGeneral('medico', 'si', this)" class="yesno">Sí</button>
+    <button onclick="setDatoGeneral('medico', 'no', this)" class="yesno">No</button>
 </div>
 
-
+<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
+</div>
 
 <!-- BLOQUE 2 — CONFORT TÉRMICO -->
 <div id="step2" class="step">
