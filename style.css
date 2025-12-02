@@ -1,16 +1,186 @@
+/* GENERAL */
+body {
+  font-family: 'Public Sans', sans-serif;
+  background: #ffffff;
+  margin: 0;
+  padding: 0;
+  color: #222;
+  line-height: 1.5;
+}
 
-body { font-family: 'Public Sans', sans-serif; padding:20px; background:white; }
-.step{display:none;} .step.active{display:block;}
-.input{width:100%; padding:10px; margin-bottom:12px; border:1px solid #ddd; border-radius:6px;}
-.next-btn, .back-btn{padding:12px 18px; border:none; border-radius:6px; font-weight:600; cursor:pointer; margin-top:15px;}
-.next-btn{background:#4F9CF9;color:white;}
-.back-btn{background:#ddd;}
-.question{font-weight:600; margin-top:20px;}
-.description{font-size:14px; color:#444; margin-bottom:8px;}
-.btn-group{display:flex; gap:10px; margin-bottom:15px;}
-.btn-group button{flex:1; padding:12px; border-radius:6px; border:1px solid #ccc; background:#f5f5f5; font-weight:600;}
-.btn-group button.selected{background:#b8e6b8; border-color:#3a9b3a;}
-.no.muygrave.selected{background:#ffb3b3; border-color:#ff0000;}
-.no.grave.selected{background:#ffc8c8; border-color:#ff4d4d;}
-.no.medio.selected{background:#ffe0b3; border-color:#ff9900;}
-.no.leve.selected{background:#fff4b3; border-color:#e6c300;}
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+h3 {
+  margin-top: 25px;
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 4px;
+}
+
+h4 {
+  margin-top: 15px;
+  font-weight: 600;
+  color: #444;
+}
+
+p {
+  margin: 6px 0;
+}
+
+/* STEPS */
+.step {
+  display: none;
+  padding: 20px;
+}
+
+.step.active {
+  display: block;
+}
+
+/* INPUTS */
+label {
+  font-size: 16px;
+  font-weight: 600;
+  display: block;
+  margin: 10px 0 5px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+/* BOTONES DE NAVEGACIÓN (BOTÓN C) */
+.next-btn, .back-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.next-btn {
+  background: #4F9CF9;   /* Celeste opción C */
+  color: white;
+}
+
+.back-btn {
+  background: #e4e4e4;
+  color: #333;
+}
+
+/* BOTONES SI/NO */
+.pregunta {
+  margin-bottom: 25px;
+  padding: 15px;
+  border-radius: 10px;
+  background: #f7f7f7;
+}
+
+.pregunta strong {
+  font-size: 17px;
+}
+
+.explica {
+  font-size: 14px;
+  color: #555;
+  margin-top: 5px;
+}
+
+/* Contenedor de botones SI/NO */
+.opciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Base */
+.btn-resp {
+  flex: 1;
+  padding: 12px;
+  text-align: center;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+}
+
+/* ANIMACIÓN */
+.btn-resp:active {
+  transform: scale(0.97);
+}
+
+/* SI (bueno) */
+.btn-si {
+  background: #2ecc71;
+  color: white;
+}
+
+/* NO — Colores por gravedad */
+.btn-no-muygrave {
+  background: #ff4d4d;
+  color: white;
+}
+
+.btn-no-grave {
+  background: #ff6961;
+  color: white;
+}
+
+.btn-no-medio {
+  background: #f5a623;
+  color: white;
+}
+
+.btn-no-leve {
+  background: #fbd55b;
+  color: #111;
+}
+
+/* Seleccionado */
+.seleccionado {
+  outline: 3px solid #000;
+  transform: scale(0.98);
+}
+
+/* RESULTADOS */
+#resultado {
+  padding: 10px;
+  margin-top: 10px;
+}
+
+hr {
+  margin: 20px 0;
+  border: none;
+  border-bottom: 2px solid #ddd;
+}
+
+/* PDF BUTTON */
+.print-btn {
+  margin-top: 20px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  h1 { font-size: 22px; }
+  h2 { font-size: 20px; }
+  .next-btn, .back-btn { font-size: 16px; }
+}
