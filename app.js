@@ -427,18 +427,19 @@ function calcular() {
 
     <hr>
 
-    <h3>Medidas urgentes</h3>
-  `;
-
-  if (prioridades.length === 0) {
-    html += `<p>No hay medidas urgentes.</p>`;
-  } else {
-    prioridades.forEach(p => {
-      html += `<p>• <strong>${p.texto}</strong> — ${p.gravedad.toUpperCase()} ${p.emoji}</p>`;
-    });
-  }
-
-  html += `<hr><h3>Resumen por bloque</h3>`;
+   html += `
+<hr>
+<h3>Resumen de clasificación</h3>
+<ul>
+  <li><strong>Muy graves (🚨):</strong> ${muy}</li>
+  <li><strong>Graves (🔴):</strong> ${gra}</li>
+  <li><strong>Medias (🟠):</strong> ${med}</li>
+  <li><strong>Leves (🟡):</strong> ${lev}</li>
+  <li><strong>Buenas (🟢):</strong> ${Object.keys(respuestas).length - (muy + gra + med + lev)}</li>
+</ul>
+<hr>
+<h3>Resumen por bloque</h3>
+`;
 
   const nombresBloques = {
     form2: "Bloque 2 – Confort térmico",
