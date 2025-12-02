@@ -530,6 +530,10 @@ function calcular() {
     <p><strong>Días:</strong> ${document.getElementById("dias").value}</p>
     <p><strong>Horarios:</strong> ${document.getElementById("horarios").value}</p>
 
+    <p><strong>Servicio médico (107):</strong> 
+       ${datosGenerales.medico ? datosGenerales.medico.toUpperCase() : "NO DECLARADO"}
+   </p>
+
     <hr>
 
     <h3>Medidas urgentes</h3>
