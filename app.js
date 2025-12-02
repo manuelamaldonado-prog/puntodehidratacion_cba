@@ -31,11 +31,6 @@ const bloques = {
       g: "leve"
     },
     {
-      t: "¿El punto cuenta con disponibilidad de agua fría?",
-      d: "Agua fría proveniente de heladera, dispenser o botellón refrigerado.",
-      g: "medio"  // NO = muygrave automático
-    },
-    {
       t: "¿El espacio posee aire acondicionado en funcionamiento?",
       d: "Aire acondicionado operativo y accesible.",
       g: "medio"
@@ -124,6 +119,11 @@ const bloques = {
       t: "¿El punto cuenta con disponibilidad de agua potable?",
       d: "Agua apta para consumo humano.",
       g: "muygrave"
+    },
+       {
+      t: "¿El punto cuenta con disponibilidad de agua fría?",
+      d: "Agua fría proveniente de heladera, dispenser o botellón refrigerado.",
+      g: "medio"  // NO = medio automático
     },
     {
       t: "¿Se dispone de un área de reposo o espera?",
