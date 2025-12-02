@@ -248,54 +248,60 @@ function obtenerGravedadFinal(bloque, index, valor) {
   let preg = bloques[bloque][index];
   let base = preg.g;
 
-  /* Agua fría */
-  if (bloque === "form2" && index === 2) {
-    if (valor === "no") return "muygrave";
-    return "bueno";
+  /* Agua potable (form7_0) */
+  if (bloque === "form7" && index === 0) {
+    return valor === "si" ? "bueno" : "muygrave";
   }
 
-  /* Agua potable */
-  if (bloque === "form7" && index === 0) {
-    if (valor === "no") return "muygrave";
-    return "bueno";
+  /* Agua fría (form7_1) */
+  if (bloque === "form7" && index === 1) {
+    return valor === "si" ? "bueno" : "medio";
   }
 
   /* Aire + ventilador */
-  if (bloque === "form2" && (index === 3 || index === 4)) {
-    let aa = respuestas["form2_3"];
-    let vent = respuestas["form2_4"];
+  if (bloque === "form2" && (index === 2 || index === 3)) {
+    let aa = respuestas["form2_2"];   // Pregunta AA
+    let vent = respuestas["form2_3"]; // Pregunta ventiladores
 
     if (aa && vent) {
+      // NO + SI
       if (aa === "no" && vent === "si") {
-        if (index === 3) return "medio";
-        if (index === 4) return "bueno";
+        if (index === 2) return "medio"; // aire = medio
+        if (index === 3) return "bueno"; // ventilador = bueno
       }
 
-      if (aa === "si" && vent === "si") return "bueno";
+      // SI + SI
+      if (aa === "si" && vent === "si") {
+        return "bueno";
+      }
 
+      // SI + NO
       if (aa === "si" && vent === "no") {
-        if (index === 3) return "bueno";
-        if (index === 4) return "leve";
+        if (index === 2) return "bueno"; // aire = bueno
+        if (index === 3) return "leve";  // ventilador = leve
       }
 
+      // NO + NO
       if (aa === "no" && vent === "no") {
-        if (index === 3) return "medio";
-        if (index === 4) return "grave";
+        if (index === 2) return "medio"; // aire = medio
+        if (index === 3) return "grave"; // ventilador = grave
       }
     }
   }
 
-  /* Techo + planta superior */
+  /* Techo + planta superior (form4_0 y form4_2) */
   if (bloque === "form4" && index === 2) {
     let techo = respuestas["form4_0"];
     let planta = respuestas["form4_2"];
 
     if (techo && planta) {
+      // Techo NO transfiere calor
       if (techo === "no") {
         if (planta === "no") return "medio";
         if (planta === "si") return "bueno";
       }
 
+      // Techo SI transfiere calor
       if (techo === "si") {
         if (planta === "no") return "grave";
         if (planta === "si") return "bueno";
@@ -303,23 +309,20 @@ function obtenerGravedadFinal(bloque, index, valor) {
     }
   }
 
-  /* Muros claros */
+  /* Muros claros (form4_1) */
   if (bloque === "form4" && index === 1) {
-    if (valor === "si") return "bueno";
-    return "grave";
+    return valor === "si" ? "bueno" : "grave";
   }
 
-  /* Protecciones pasivas */
-  if (bloque === "form5" && index === 0) {
-    if (valor === "si") return "bueno";
-    return "leve";
+  /* Protecciones pasivas (form5_0, form5_1, form5_2) */
+  if (bloque === "form5") {
+    return valor === "si" ? "bueno" : "leve";
   }
 
   /* Regla general */
   if (valor === "si") return "bueno";
   return base;
 }
-
 /* ============================================================
    CLASIFICACIÓN FINAL
 =========================================================== */
