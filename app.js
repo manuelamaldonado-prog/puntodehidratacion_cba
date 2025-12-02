@@ -120,7 +120,7 @@ const bloques = {
       d: "Agua apta para consumo humano.",
       g: "muygrave"
     },
-       {
+   {
       t: "¿El punto cuenta con disponibilidad de agua fría?",
       d: "Agua fría proveniente de heladera, dispenser o botellón refrigerado.",
       g: "medio"  // NO = medio automático
