@@ -333,13 +333,19 @@ function clasificarPunto() {
   if (aguaPotNo)
     return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
 
-  if (muy >= 1 || gra >= 3 || med >= 5 || lev >= 7)
-    return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
+   // ROJO solo si hay fallas realmente críticas
+   if (muy >= 1 || gra >= 3) {
+     return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
+   }
+   
+   // VERDE si cumple condiciones óptimas
+   if (muy === 0 && gra === 0 && med <= 3 && lev <= 5) {
+     return { estado: "verde", tipoEspacio, muy, gra, med, lev };
+   }
+   
+   // TODO LO DEMÁS ES AMARILLO
+   return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
 
-  if (muy === 0 && gra <= 1 && med <= 2 && lev <= 3)
-    return { estado: "verde", tipoEspacio, muy, gra, med, lev };
-
-  return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
 }
 
 
