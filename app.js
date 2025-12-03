@@ -79,8 +79,18 @@ const bloques = {
       t: "¿Posee toldos, cortinas o elementos de sombra?",
       d: "Elementos que mitiguen la radiación solar directa.",
       g: "leve"
-    }
-  ],
+    },
+       {
+      t: "¿Posee vegetación al norte?",
+      d: "Los árboles al norte generan sombra.",
+      g: "medio"
+    },
+     {
+      t: "¿Posee vegetación al oeste?",
+      d: "Y al oeste también.",
+      g: "medio"
+    },
+     
 
   /* BLOQUE 6 – DISEÑO */
   form6: [
