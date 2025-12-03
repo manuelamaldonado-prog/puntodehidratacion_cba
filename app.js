@@ -80,7 +80,7 @@ const bloques = {
       d: "Elementos que mitiguen la radiación solar directa.",
       g: "leve"
     },
-       {
+    {
       t: "¿Posee vegetación al norte?",
       d: "Los árboles al norte generan sombra.",
       g: "medio"
