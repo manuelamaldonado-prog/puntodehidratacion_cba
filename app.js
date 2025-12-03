@@ -89,7 +89,8 @@ const bloques = {
       t: "¿Posee vegetación al oeste?",
       d: "Y al oeste también.",
       g: "medio"
-    },
+    }
+   ],
      
 
   /* BLOQUE 6 – DISEÑO */
