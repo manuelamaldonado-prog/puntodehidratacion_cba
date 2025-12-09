@@ -62,11 +62,6 @@ const bloques = {
       g: "grave"
     },
     {
-      t: "¿Los muros exteriores están pintados en color claro?",
-      d: "Los colores claros reflejan la radiación solar.",
-      g: "grave"
-    },
-    {
       t: "¿El recinto posee planta superior?",
       d: "La planta superior reduce la transferencia térmica directa desde la cubierta.",
       g: "medio"
@@ -81,13 +76,13 @@ const bloques = {
       g: "leve"
     },
     {
-      t: "¿Posee vegetación al norte?",
-      d: "Los árboles al norte generan sombra.",
+      t: "¿Posee vegetación / edificios / medianeras, etc al norte?",
+      d: "Estos elementos ubicados al norte generan sombreado sobre el recinto.",
       g: "medio"
     },
      {
-      t: "¿Posee vegetación al oeste?",
-      d: "Y al oeste también.",
+      t: "¿Posee vegetación / edificios / medianeras, etc? al oeste?",
+      d: "Estos elementos ubicados al oeste generan sombreado sobre el recinto.",
       g: "medio"
     }
    ],
@@ -278,19 +273,17 @@ function obtenerGravedadFinal(bloque, index, valor) {
     if (techo && planta) {
 
       if (techo === "no") {
-        if (planta === "no") return "grave";
+        if (planta === "no") return "medio";
         if (planta === "si") return "leve";
       }
 
       if (techo === "si") {
-        return "bueno";
+         if (planta === "no") return "leve";
+        if (planta === "si") return "bueno";
       }
     }
   }
 
-  /* Muros claros */
-  if (bloque === "form4" && index === 1)
-    return valor === "si" ? "bueno" : "grave";
 
   /* Protecciones pasivas */
   if (bloque === "form5")
@@ -304,19 +297,22 @@ function obtenerGravedadFinal(bloque, index, valor) {
 /* ============================================================
    CLASIFICACIÓN GENERAL DEL PUNTO
 =========================================================== */
-
 function clasificarPunto() {
   let muy = 0, gra = 0, med = 0, lev = 0;
 
   let aguaPotNo = respuestas["form7_0"] === "no";
-  let aa = respuestas["form2_2"] === "si";
+  let aguaFria = respuestas["form7_1"] === "si";
 
   let tipoEspacio = "";
 
-  if (aguaPotNo) tipoEspacio = "NO APTO – No posee agua potable";
-  else if (aa) tipoEspacio = "Área climatizada";
-  else tipoEspacio = "Punto de hidratación";
+  // Identificar tipo de espacio
+if (!aguaPotNo && aguaFria) {
+    tipoEspacio = "Punto de Hidratación";
+  } else {
+    tipoEspacio = "Área Climatizada";
+  }
 
+  // Contar fallas según gravedad final
   Object.keys(respuestas).forEach(key => {
     let [b, idx] = key.split("_");
     let v = respuestas[key];
@@ -330,24 +326,47 @@ function clasificarPunto() {
     }
   });
 
-  if (aguaPotNo)
+  // PRIORIDAD ABSOLUTA: muy graves ⇒ rojo
+  if (muy >= 1) {
     return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
+  }
 
-   // ROJO solo si hay fallas realmente críticas
-   if (muy >= 1 || gra >= 3) {
-     return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
-   }
-   
-   // VERDE si cumple condiciones óptimas
-   if (muy === 0 && gra === 0 && med <= 3 && lev <= 5) {
-     return { estado: "verde", tipoEspacio, muy, gra, med, lev };
-   }
-   
-   // TODO LO DEMÁS ES AMARILLO
-   return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
+  // Evaluación por fallas graves
+  if (gra >= 4) {
+    return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
+  } 
+  if (gra >= 2) {
+    return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
+  } 
+  if (gra === 1) {
+    return { estado: "verde", tipoEspacio, muy, gra, med, lev };
+  }
 
+  // Evaluación por fallas medias
+  if (med >= 5) {
+    return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
+  }
+  if (med >= 3) {
+    return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
+  }
+  if (med >= 1) {
+    return { estado: "verde", tipoEspacio, muy, gra, med, lev };
+  }
+
+  // Evaluación por fallas leves
+  if (lev >= 7) {
+    return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
+  }
+  if (lev >= 4) {
+    return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
+  }
+  if (lev >= 1) {
+    return { estado: "verde", tipoEspacio, muy, gra, med, lev };
+  }
+
+  // Si no hay fallas
+  return { estado: "verde", tipoEspacio, muy, gra, med, lev };
 }
-
 
 /* ============================================================
    GENERAR INFORME FINAL
@@ -361,6 +380,9 @@ function calcular() {
   let m2 = parseFloat(document.getElementById("m2").value) || 0;
   let capacidad = Math.floor(m2 / 3.5);
 
+  let aguaFriaDisponible = respuestas["form7_1"] === "si";
+
+  // Empieza el HTML
   let html = `
   <h2>${estado === "rojo" ? "🟥 Condiciones críticas" :
         estado === "amarillo" ? "🟡 Requiere mejoras" :
@@ -370,6 +392,28 @@ function calcular() {
   <p><strong>Área total:</strong> ${m2} m²</p>
   <p><strong>Personas permitidas:</strong> ${capacidad}</p>
 
+  <hr>
+  `;
+
+  // ===========================
+  // MENSAJES ESPECIALES
+  // ===========================
+
+  if (aguaFriaDisponible && estado === "rojo") {
+    html += `<h2 style="color:#d40000;">CUMPLE PUNTO DE HIDRATACIÓN</h2>`;
+  }
+
+  if (estado === "verde" || estado === "amarillo") {
+    html += `<h2 style="color:#0077cc;">CUMPLE ÁREA CLIMATIZADA</h2>`;
+  }
+
+  if (aguaFriaDisponible && (estado === "verde" || estado === "amarillo")) {
+    html += `<h2 style="color:#22aa22;">CUMPLE PUNTO DE HIDRATACIÓN</h2>`;
+  }
+
+  // ===========================
+
+  html += `
   <hr>
 
   <h3>Datos generales del relevamiento</h3>
@@ -437,11 +481,25 @@ function calcular() {
     html += `<hr>`;
   });
 
+  // SECCIÓN DE COMENTARIOS Y FOTOS
+  html += `
+  <h3>Comentarios adicionales</h3>
+  <textarea style="width:100%; height:120px;"></textarea>
+
+  <h3>Fotografías (5 máximo)</h3>
+  <div style="display:flex; flex-wrap:wrap; gap:10px;">
+    <input type="file" accept="image/*">
+    <input type="file" accept="image/*">
+    <input type="file" accept="image/*">
+    <input type="file" accept="image/*">
+    <input type="file" accept="image/*">
+  </div>
+  `;
+
   document.getElementById("resultado").innerHTML = html;
 
   nextStep();
 }
-
 
 /* ============================================================
    PDF
@@ -449,7 +507,8 @@ function calcular() {
 
 function descargarPDF() {
   const contenido = document.getElementById("resultado").innerHTML;
-
+html += `
+<hr>
   const ventana = window.open("", "_blank");
   ventana.document.write(`
     <html>
