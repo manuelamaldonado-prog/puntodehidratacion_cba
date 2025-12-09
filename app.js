@@ -122,7 +122,7 @@ const bloques = {
     {
       t: "¿Se dispone de un área de reposo o espera?",
       d: "Sillas, bancos o sectores confortables.",
-      g: "leve"
+      g: "medio"
     },
     {
       t: "¿El espacio está preparado para futura instalación de energía solar?",
