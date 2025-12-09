@@ -507,8 +507,7 @@ function calcular() {
 
 function descargarPDF() {
   const contenido = document.getElementById("resultado").innerHTML;
-html += `
-<hr>
+
   const ventana = window.open("", "_blank");
   ventana.document.write(`
     <html>
@@ -523,6 +522,13 @@ html += `
         }
         h3 {
           border-bottom: 2px solid #ddd;
+        }
+        textarea {
+          width: 100%;
+          height: 120px;
+          border: 1px solid #aaa;
+          padding: 8px;
+          border-radius: 6px;
         }
       </style>
     </head>
