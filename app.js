@@ -343,10 +343,10 @@ if (!aguaPotNo && aguaFria) {
   }
 
   // Evaluación por fallas medias
-  if (med === 5 || med === 6 || med === 7) {
+  if (med === 6 || med === 7) {
     return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
   }
-  if (med === 3 || med === 4 ) {
+  if (med === 3 || med === 4 || med === 5 ) {
     return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
   }
   if (med === 1 || med === 2) {
