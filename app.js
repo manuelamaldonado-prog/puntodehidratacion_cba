@@ -335,7 +335,7 @@ if (!aguaPotNo && aguaFria) {
   if (gra >= 4) {
     return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
   } 
-  if (gra >= 2) {
+  if (gra === 2 || gra === 3) {
     return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
   } 
   if (gra === 1) {
@@ -343,13 +343,13 @@ if (!aguaPotNo && aguaFria) {
   }
 
   // Evaluación por fallas medias
-  if (med >= 5) {
+  if (med === 5 || med === 6 || med === 7) {
     return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
   }
-  if (med >= 3) {
+  if (med === 3 || med === 4 ) {
     return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
   }
-  if (med >= 1) {
+  if (med === 1 || med === 2) {
     return { estado: "verde", tipoEspacio, muy, gra, med, lev };
   }
 
@@ -357,10 +357,10 @@ if (!aguaPotNo && aguaFria) {
   if (lev >= 7) {
     return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
   }
-  if (lev >= 4) {
+  if (lev === 4 || lev === 5 || lev === 6) {
     return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
   }
-  if (lev >= 1) {
+  if (lev === 1 || lev === 2 || lev === 3) {
     return { estado: "verde", tipoEspacio, muy, gra, med, lev };
   }
 
