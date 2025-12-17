@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Evaluación de Área Climatizada</title>
 
   <!-- Fuente -->
@@ -11,9 +10,6 @@
 
   <!-- Estilos -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- PWA sin service worker -->
-  <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
@@ -24,7 +20,7 @@
 <div id="step1" class="step active">
   <h1>Bloque 1 – Información general</h1>
 
-  <label>Identificación del área</label>
+  <label>Nombre / Número del punto</label>
   <input id="nombre" class="input" />
 
   <label>Persona a cargo del relevamiento</label>
@@ -43,13 +39,12 @@
 
   <label>Disponibilidad de servicio médico (107)</label>
   <div class="yesno-container">
-    <button onclick="setDatoGeneral('medico', 'si', this)" class="yesno">Sí</button>
-    <button onclick="setDatoGeneral('medico', 'no', this)" class="yesno">No</button>
+    <button class="yesno" onclick="setDatoGeneral('medico','si',this)">Sí</button>
+    <button class="yesno" onclick="setDatoGeneral('medico','no',this)">No</button>
   </div>
 
   <button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
 </div>
-
 
 <!-- ============================================================
      BLOQUE 2 — CONFORT TÉRMICO
@@ -62,7 +57,6 @@
   <button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
 </div>
 
-
 <!-- ============================================================
      BLOQUE 3 — DISPOSICIONES EDILICIAS
 ============================================================== -->
@@ -73,7 +67,6 @@
   <button onclick="prevStep()" class="back-btn">← Volver</button>
   <button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
 </div>
-
 
 <!-- ============================================================
      BLOQUE 4 — ENVOLVENTE TÉRMICA
@@ -86,7 +79,6 @@
   <button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
 </div>
 
-
 <!-- ============================================================
      BLOQUE 5 — PROTECCIONES PASIVAS
 ============================================================== -->
@@ -97,7 +89,6 @@
   <button onclick="prevStep()" class="back-btn">← Volver</button>
   <button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
 </div>
-
 
 <!-- ============================================================
      BLOQUE 6 — DISEÑO
@@ -110,7 +101,6 @@
   <button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
 </div>
 
-
 <!-- ============================================================
      BLOQUE 7 — SERVICIOS
 ============================================================== -->
@@ -122,9 +112,8 @@
   <button onclick="calcular()" class="next-btn">Calcular resultado</button>
 </div>
 
-
 <!-- ============================================================
-     RESULTADO FINAL
+     RESULTADO
 ============================================================== -->
 <div id="step8" class="step">
   <h1>Resultado</h1>
@@ -135,8 +124,6 @@
   <button onclick="location.reload()" class="next-btn">Nueva evaluación</button>
 </div>
 
-
-<!-- JS -->
-<script src="app.js" defer></script>
+<script src="app.js"></script>
 </body>
 </html>
