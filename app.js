@@ -41,15 +41,15 @@ const bloques = {
 
   /* BLOQUE 6 – DISEÑO */
   form6: [
-    { t: "¿Cuenta con aberturas altas?", d: "Favorecen salida de aire caliente.", g: "leve" },
+    { t: "¿Cuenta con aberturas altas para permitir la salida del aire caliente?", d: "Favorecen ventilación.", g: "leve" },
     { t: "¿Posee tela mosquitera?", d: "Mejora condiciones sanitarias.", g: "leve" }
   ],
 
   /* BLOQUE 7 – SERVICIOS */
   form7: [
-    { t: "¿Cuenta con disponibilidad de agua fría para el público?", d: "Dispenser, heladera o botellón.", g: "muygrave" },
+    { t: "¿El punto cuenta con disponibilidad de agua fría?", d: "Dispenser, heladera o botellón.", g: "muygrave" },
     { t: "¿Se dispone de un área de reposo o espera?", d: "Sillas, bancos, sectores confortables.", g: "medio" },
-    { t: "¿Está preparado para futura instalación de energía solar?", d: "Espacio, estructura y capacidad.", g: "medio" }
+    { t: "¿El espacio está preparado para futura instalación de energía solar?", d: "Espacio, estructura y capacidad.", g: "medio" }
   ]
 };
 
@@ -76,6 +76,8 @@ function generarFormularios() {
   });
 }
 
+generarFormularios();
+
 /* ============================================================
    RESPUESTAS
 =========================================================== */
@@ -100,12 +102,21 @@ let pasoActual = 1;
 
 function mostrarPaso(n) {
   document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
-  const step = document.getElementById("step" + n);
-  if (step) step.classList.add("active");
+  document.getElementById("step" + n).classList.add("active");
 }
 
 function nextStep() { pasoActual++; mostrarPaso(pasoActual); }
 function prevStep() { pasoActual--; mostrarPaso(pasoActual); }
+
+/* ============================================================
+   CAPACIDAD
+=========================================================== */
+
+document.getElementById("m2").addEventListener("input", () => {
+  const m2 = parseFloat(document.getElementById("m2").value) || 0;
+  document.getElementById("capacidadTexto").innerHTML =
+    `<strong>Personas permitidas:</strong> ${Math.floor(m2 / 3.5)}`;
+});
 
 /* ============================================================
    CLASIFICACIÓN
@@ -119,10 +130,6 @@ function obtenerGravedadFinal(b, i, v) {
 function clasificarPunto() {
   let muy = 0, gra = 0, med = 0, lev = 0;
 
-  if (respuestas["form7_0"] !== "si") {
-    return { estado: "rojo", muy: 1, gra, med, lev };
-  }
-
   Object.keys(respuestas).forEach(k => {
     const [b, i] = k.split("_");
     const g = obtenerGravedadFinal(b, +i, respuestas[k]);
@@ -134,10 +141,19 @@ function clasificarPunto() {
     }
   });
 
-  const buenas = Object.keys(respuestas).length - (muy + gra + med + lev);
-  if (buenas < 4 || muy >= 1 || gra >= 4) return { estado: "rojo", muy, gra, med, lev };
-  if (gra >= 2 || med >= 3) return { estado: "amarillo", muy, gra, med, lev };
-  return { estado: "verde", muy, gra, med, lev };
+  const total = Object.keys(respuestas).length;
+  const buenas = total - (muy + gra + med + lev);
+
+  // REGLA DE MÍNIMAS CONDICIONES FAVORABLES
+  if (buenas < 4) {
+    return { estado: "rojo", muy, gra, med, lev, buenas };
+  }
+
+  if (muy >= 1) return { estado: "rojo", muy, gra, med, lev, buenas };
+  if (gra >= 4) return { estado: "rojo", muy, gra, med, lev, buenas };
+  if (gra >= 2 || med >= 3) return { estado: "amarillo", muy, gra, med, lev, buenas };
+
+  return { estado: "verde", muy, gra, med, lev, buenas };
 }
 
 /* ============================================================
@@ -146,21 +162,39 @@ function clasificarPunto() {
 
 function calcular() {
   const r = clasificarPunto();
-  const m2 = +document.getElementById("m2").value || 0;
+  const m2 = parseFloat(document.getElementById("m2").value) || 0;
   const cap = Math.floor(m2 / 3.5);
 
-  document.getElementById("resultado").innerHTML = `
-    <h2>${r.estado === "rojo" ? "🟥 NO APTA" : r.estado === "amarillo" ? "🟡 CON MEJORAS" : "🟢 APTA"}</h2>
-    <p><strong>Área:</strong> ${m2} m²</p>
-    <p><strong>Capacidad:</strong> ${cap} personas</p>
-    <h3>Resumen</h3>
+  let html = `
+    <h2>${r.estado === "rojo" ? "🟥 Área NO apta como área climatizada" :
+      r.estado === "amarillo" ? "🟡 Área climatizada con mejoras necesarias" :
+      "🟢 Área climatizada apta"}</h2>
+
+    <p><strong>Área total:</strong> ${m2} m²</p>
+    <p><strong>Personas permitidas:</strong> ${cap}</p>
+
+    <hr>
+
+    <h3>Datos generales del relevamiento</h3>
+    <p><strong>Punto:</strong> ${document.getElementById("nombre").value}</p>
+    <p><strong>Responsable:</strong> ${document.getElementById("persona").value}</p>
+    <p><strong>Días:</strong> ${document.getElementById("dias").value}</p>
+    <p><strong>Horarios:</strong> ${document.getElementById("horarios").value}</p>
+    <p><strong>Servicio médico (107):</strong> ${datosGenerales.medico ? datosGenerales.medico.toUpperCase() : "NO DECLARADO"}</p>
+
+    <hr>
+
+    <h3>Resumen de clasificación</h3>
     <ul>
       <li>Muy graves: ${r.muy}</li>
       <li>Graves: ${r.gra}</li>
       <li>Medias: ${r.med}</li>
       <li>Leves: ${r.lev}</li>
+      <li>Buenas: ${r.buenas}</li>
     </ul>
   `;
+
+  document.getElementById("resultado").innerHTML = html;
   nextStep();
 }
 
@@ -173,19 +207,3 @@ function descargarPDF() {
   v.document.write(`<html><body>${document.getElementById("resultado").innerHTML}</body></html>`);
   v.print();
 }
-
-/* ============================================================
-   INIT SEGURO
-=========================================================== */
-
-window.addEventListener("load", () => {
-  generarFormularios();
-
-  const m2 = document.getElementById("m2");
-  const cap = document.getElementById("capacidadTexto");
-  if (m2 && cap) {
-    m2.addEventListener("input", () => {
-      cap.innerHTML = `<strong>Personas permitidas:</strong> ${Math.floor((+m2.value || 0) / 3.5)}`;
-    });
-  }
-});
