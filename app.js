@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", () => {
+
 /* ============================================================
    APP.JS — DEFINICIONES GENERALES
 =========================================================== */
@@ -58,12 +60,12 @@ const bloques = {
   form4: [
     {
       t: "¿El material del techo evita la trasferencia de calor al recinto?",
-      d: "Ejemplo: losa, cieloraso aislante, techo de chapa con aislación térmica, etc.",
+      d: "Ejemplo: losa, cieloraso aislante, techo de chapa con aislación térmica.",
       g: "grave"
     },
     {
       t: "¿El recinto posee planta superior?",
-      d: "La planta superior reduce la transferencia térmica directa desde la cubierta.",
+      d: "La planta superior reduce la transferencia térmica directa.",
       g: "medio"
     }
   ],
@@ -77,12 +79,12 @@ const bloques = {
     },
     {
       t: "¿Posee vegetación / edificios / medianeras al norte?",
-      d: "Estos elementos ubicados al norte generan sombreado.",
+      d: "Estos elementos generan sombreado.",
       g: "medio"
     },
     {
       t: "¿Posee vegetación / edificios / medianeras al oeste?",
-      d: "Estos elementos ubicados al oeste generan sombreado.",
+      d: "Estos elementos generan sombreado.",
       g: "medio"
     }
   ],
@@ -91,12 +93,12 @@ const bloques = {
   form6: [
     {
       t: "¿Cuenta con aberturas altas para permitir la salida del aire caliente?",
-      d: "Aberturas ubicadas a más de 2 metros favorecen la ventilación.",
+      d: "Aberturas a más de 2 m favorecen la ventilación.",
       g: "leve"
     },
     {
       t: "¿Posee tela mosquitera?",
-      d: "Evita ingreso de insectos y mejora las condiciones sanitarias.",
+      d: "Evita ingreso de insectos.",
       g: "leve"
     }
   ],
@@ -105,7 +107,7 @@ const bloques = {
   form7: [
     {
       t: "¿El espacio cuenta con disponibilidad de agua fría para el público?",
-      d: "Agua fría proveniente de dispenser o botellón refrigerado.",
+      d: "Dispenser o botellón refrigerado.",
       g: "muygrave"
     },
     {
@@ -114,8 +116,8 @@ const bloques = {
       g: "medio"
     },
     {
-      t: "¿El espacio está preparado para futura instalación de energía solar?",
-      d: "Espacio físico, estructura resistente y capacidad eléctrica.",
+      t: "¿Está preparado para futura instalación de energía solar?",
+      d: "Espacio físico, estructura y capacidad eléctrica.",
       g: "medio"
     }
   ]
@@ -205,36 +207,26 @@ document.getElementById("m2").addEventListener("input", () => {
 
 
 /* ============================================================
-   LÓGICAS ESPECIALES DE CLASIFICACIÓN
+   LÓGICAS DE CLASIFICACIÓN
 =========================================================== */
 
 function obtenerGravedadFinal(bloque, index, valor) {
 
-  /* Agua fría — condición crítica */
   if (bloque === "form7" && index === 0)
     return valor === "si" ? "bueno" : "muygrave";
 
-  /* Aire acondicionado + ventiladores */
   if (bloque === "form2" && (index === 2 || index === 3)) {
     const aa = respuestas["form2_2"];
     const vent = respuestas["form2_3"];
 
     if (aa && vent) {
-      if (aa === "no" && vent === "si")
-        return index === 2 ? "medio" : "bueno";
-
-      if (aa === "si" && vent === "si")
-        return "bueno";
-
-      if (aa === "si" && vent === "no")
-        return index === 2 ? "bueno" : "leve";
-
-      if (aa === "no" && vent === "no")
-        return index === 2 ? "medio" : "grave";
+      if (aa === "no" && vent === "si") return index === 2 ? "medio" : "bueno";
+      if (aa === "si" && vent === "si") return "bueno";
+      if (aa === "si" && vent === "no") return index === 2 ? "bueno" : "leve";
+      if (aa === "no" && vent === "no") return index === 2 ? "medio" : "grave";
     }
   }
 
-  /* Techo + planta superior */
   if (bloque === "form4" && index === 1) {
     const techo = respuestas["form4_0"];
     const planta = respuestas["form4_1"];
@@ -245,26 +237,23 @@ function obtenerGravedadFinal(bloque, index, valor) {
     }
   }
 
-  /* Protecciones pasivas */
   if (bloque === "form5")
     return valor === "si" ? "bueno" : "leve";
 
-  const base = bloques[bloque][index].g;
-  return valor === "si" ? "bueno" : base;
+  return valor === "si" ? "bueno" : bloques[bloque][index].g;
 }
 
 
 /* ============================================================
-   CLASIFICACIÓN GENERAL — ÁREA CLIMATIZADA
+   CLASIFICACIÓN FINAL — ÁREA CLIMATIZADA
 =========================================================== */
 
 function clasificarPunto() {
 
   let muy = 0, gra = 0, med = 0, lev = 0;
 
-  /* Condición necesaria y suficiente */
   if (respuestas["form7_0"] !== "si") {
-    return { estado: "rojo", muy, gra, med, lev };
+    return { estado: "rojo" };
   }
 
   Object.keys(respuestas).forEach(key => {
@@ -284,17 +273,17 @@ function clasificarPunto() {
   const buenas = total - (muy + gra + med + lev);
 
   if (buenas < 4 || muy >= 1 || gra >= 4 || med >= 6 || lev >= 7)
-    return { estado: "rojo", muy, gra, med, lev };
+    return { estado: "rojo" };
 
   if (gra >= 2 || med >= 3 || lev >= 4)
-    return { estado: "amarillo", muy, gra, med, lev };
+    return { estado: "amarillo" };
 
-  return { estado: "verde", muy, gra, med, lev };
+  return { estado: "verde" };
 }
 
 
 /* ============================================================
-   GENERAR INFORME FINAL
+   RESULTADO FINAL
 =========================================================== */
 
 function calcular() {
@@ -304,7 +293,7 @@ function calcular() {
   const m2 = parseFloat(document.getElementById("m2").value) || 0;
   const capacidad = Math.floor(m2 / 3.5);
 
-  let html = `
+  document.getElementById("resultado").innerHTML = `
     <h2>
       ${estado === "rojo" ? "🟥 Área NO apta como área climatizada" :
         estado === "amarillo" ? "🟡 Área climatizada con mejoras necesarias" :
@@ -313,10 +302,8 @@ function calcular() {
 
     <p><strong>Área total:</strong> ${m2} m²</p>
     <p><strong>Personas permitidas:</strong> ${capacidad}</p>
-    <hr>
   `;
 
-  document.getElementById("resultado").innerHTML = html;
   nextStep();
 }
 
@@ -344,3 +331,5 @@ function descargarPDF() {
   ventana.document.close();
   ventana.print();
 }
+
+});
