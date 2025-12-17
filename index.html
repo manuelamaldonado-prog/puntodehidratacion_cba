@@ -1,141 +1,89 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Punto de Hidratación CBA</title>
+  <meta charset="UTF-8">
+  <title>Evaluación de Área Climatizada</title>
 
-<!-- Fuente -->
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Estilos -->
-<link rel="stylesheet" href="style.css">
+  <!-- Tipografía -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 
-<!-- PWA sin service worker -->
-<link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      font-family: 'Public Sans', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f6f7f9;
+      color: #222;
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+    }
+
+    .step {
+      display: none;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .pregunta {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .explica {
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    .opciones {
+      margin-top: 10px;
+    }
+
+    .btn-resp {
+      padding: 6px 14px;
+      margin-right: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      background: #fafafa;
+    }
+
+    .btn-resp.seleccionado {
+      background: #0077cc;
+      color: white;
+      border-color: #0077cc;
+    }
+
+    .nav {
+      margin-top: 20px;
+    }
+
+    input[type="number"] {
+      padding: 6px;
+      width: 120px;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- ============================================================
-     BLOQUE 1 — INFORMACIÓN GENERAL
-============================================================== -->
-<div id="step1" class="step active">
-<h1>Bloque 1 – Información general</h1>
+  <h1>Evaluación de Área Climatizada</h1>
 
-<label>Nombre / Número del punto</label>
-<input id="nombre" class="input" />
+  <!-- STEP 1 -->
+  <div class="step active" id="step1">
+    <h2>Superficie del espacio</h2>
 
-<label>Persona a cargo del relevamiento</label>
-<input id="persona" class="input" />
+    <label>
+      Á
 
-<label>Días</label>
-<input id="dias" class="input" />
-
-<label>Horarios</label>
-<input id="horarios" class="input" />
-
-<label>Metros cuadrados disponibles</label>
-<input id="m2" type="number" class="input" />
-
-<p id="capacidadTexto" class="capacidad"></p>
-
-<label>Disponibilidad de servicio médico (107)</label>
-<div class="yesno-container">
-    <button onclick="setDatoGeneral('medico', 'si', this)" class="yesno">Sí</button>
-    <button onclick="setDatoGeneral('medico', 'no', this)" class="yesno">No</button>
-</div>
-
-<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
-</div>
-
-
-<!-- ============================================================
-     BLOQUE 2 — CONFORT TÉRMICO
-============================================================== -->
-<div id="step2" class="step">
-<h1>Bloque 2 – Confort térmico</h1>
-<div id="form2"></div>
-
-<button onclick="prevStep()" class="back-btn">← Volver</button>
-<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
-</div>
-
-
-<!-- ============================================================
-     BLOQUE 3 — ACCESIBILIDAD Y ORIENTACIÓN
-============================================================== -->
-<div id="step3" class="step">
-<h1>Bloque 3 – Disposiciones edilicias</h1>
-<div id="form3"></div>
-
-<button onclick="prevStep()" class="back-btn">← Volver</button>
-<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
-</div>
-
-
-<!-- ============================================================
-     BLOQUE 4 — ENVOLVENTE TÉRMICA
-============================================================== -->
-<div id="step4" class="step">
-<h1>Bloque 4 – Envolvente térmica</h1>
-<div id="form4"></div>
-
-<button onclick="prevStep()" class="back-btn">← Volver</button>
-<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
-</div>
-
-
-<!-- ============================================================
-     BLOQUE 5 — PROTECCIONES PASIVAS
-============================================================== -->
-<div id="step5" class="step">
-<h1>Bloque 5 – Protecciones pasivas</h1>
-<div id="form5"></div>
-
-<button onclick="prevStep()" class="back-btn">← Volver</button>
-<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
-</div>
-
-
-<!-- ============================================================
-     BLOQUE 6 — DISEÑO
-============================================================== -->
-<div id="step6" class="step">
-<h1>Bloque 6 – Diseño</h1>
-<div id="form6"></div>
-
-<button onclick="prevStep()" class="back-btn">← Volver</button>
-<button onclick="nextStep()" class="next-btn">Siguiente ➜</button>
-</div>
-
-
-<!-- ============================================================
-     BLOQUE 7 — SERVICIOS
-============================================================== -->
-<div id="step7" class="step">
-<h1>Bloque 7 – Funciones y provisionamiento</h1>
-<div id="form7"></div>
-
-<button onclick="prevStep()" class="back-btn">← Volver</button>
-<button onclick="calcular()" class="next-btn">Calcular resultado</button>
-</div>
-
-
-<!-- ============================================================
-     RESULTADO FINAL
-============================================================== -->
-<div id="step8" class="step">
-<h1>Resultado</h1>
-
-<div id="resultado"></div>
-
-<button onclick="descargarPDF()" class="next-btn">Descargar PDF</button>
-<button onclick="location.reload()" class="next-btn">Nueva evaluación</button>
-</div>
-
-
-<script src="app.js"></script>
-</body>
-</html>
 
