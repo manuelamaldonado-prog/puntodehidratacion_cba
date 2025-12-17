@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Evaluación de Área Climatizada</title>
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Tipografía -->
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -16,10 +14,6 @@
       padding: 20px;
       background: #f6f7f9;
       color: #222;
-    }
-
-    h1, h2, h3 {
-      margin-top: 0;
     }
 
     .step {
@@ -45,10 +39,6 @@
       color: #555;
     }
 
-    .opciones {
-      margin-top: 10px;
-    }
-
     .btn-resp {
       padding: 6px 14px;
       margin-right: 10px;
@@ -67,23 +57,76 @@
     .nav {
       margin-top: 20px;
     }
-
-    input[type="number"] {
-      padding: 6px;
-      width: 120px;
-    }
   </style>
 </head>
 
 <body>
 
-  <h1>Evaluación de Área Climatizada</h1>
+<h1>Evaluación de Área Climatizada</h1>
 
-  <!-- STEP 1 -->
-  <div class="step active" id="step1">
-    <h2>Superficie del espacio</h2>
+<div class="step active" id="step1">
+  <h2>Superficie del espacio</h2>
 
-    <label>
-      Á
+  <label>
+    Área total (m²):
+    <input type="number" id="m2" min="0">
+  </label>
 
+  <p id="capacidadTexto"></p>
 
+  <div class="nav">
+    <button onclick="nextStep()">Continuar</button>
+  </div>
+</div>
+
+<div class="step" id="step2">
+  <h2>Bloque 2 – Confort térmico</h2>
+  <div id="form2"></div>
+  <button onclick="prevStep()">Volver</button>
+  <button onclick="nextStep()">Continuar</button>
+</div>
+
+<div class="step" id="step3">
+  <h2>Bloque 3 – Disposiciones edilicias</h2>
+  <div id="form3"></div>
+  <button onclick="prevStep()">Volver</button>
+  <button onclick="nextStep()">Continuar</button>
+</div>
+
+<div class="step" id="step4">
+  <h2>Bloque 4 – Envolvente térmica</h2>
+  <div id="form4"></div>
+  <button onclick="prevStep()">Volver</button>
+  <button onclick="nextStep()">Continuar</button>
+</div>
+
+<div class="step" id="step5">
+  <h2>Bloque 5 – Protecciones pasivas</h2>
+  <div id="form5"></div>
+  <button onclick="prevStep()">Volver</button>
+  <button onclick="nextStep()">Continuar</button>
+</div>
+
+<div class="step" id="step6">
+  <h2>Bloque 6 – Diseño</h2>
+  <div id="form6"></div>
+  <button onclick="prevStep()">Volver</button>
+  <button onclick="nextStep()">Continuar</button>
+</div>
+
+<div class="step" id="step7">
+  <h2>Bloque 7 – Servicios</h2>
+  <div id="form7"></div>
+  <button onclick="prevStep()">Volver</button>
+  <button onclick="calcular()">Calcular</button>
+</div>
+
+<div class="step" id="step8">
+  <h2>Resultado</h2>
+  <div id="resultado"></div>
+  <button onclick="descargarPDF()">Descargar PDF</button>
+</div>
+
+<script src="app.js" defer></script>
+</body>
+</html>
