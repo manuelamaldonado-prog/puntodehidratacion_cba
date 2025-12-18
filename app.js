@@ -104,9 +104,9 @@ const bloques = {
   /* BLOQUE 7 – SERVICIOS */
   form7: [
     {
-      t: "¿El punto cuenta con disponibilidad de agua fría?",
-      d: "Agua fría proveniente de heladera, dispenser o botellón refrigerado.",
-      g: "medio"
+      t: "¿El punto cuenta con disponibilidad de agua fría para el público en general?",
+      d: "Agua fría accesible para las personas (heladera, dispenser o botellón refrigerado).",
+      g: "muygrave"
     },
     {
       t: "¿Se dispone de un área de reposo o espera?",
@@ -137,20 +137,17 @@ function generarFormularios() {
       div.innerHTML = `
         <strong>${preg.t}</strong>
         <p class="explica">${preg.d}</p>
-
         <div class="opciones">
           <button class="btn-resp btn-si"
             onclick="seleccionarRespuesta('${idBloque}', ${index}, 'si', this)">
             Sí
           </button>
-
           <button class="btn-resp btn-no-${preg.g}"
             onclick="seleccionarRespuesta('${idBloque}', ${index}, 'no', this)">
             No
           </button>
         </div>
       `;
-
       cont.appendChild(div);
     });
   });
@@ -163,8 +160,7 @@ generarFormularios();
 =========================================================== */
 
 function seleccionarRespuesta(bloque, index, valor, boton) {
-  const key = `${bloque}_${index}`;
-  respuestas[key] = valor;
+  respuestas[`${bloque}_${index}`] = valor;
 
   boton.parentElement
     .querySelectorAll(".btn-resp")
@@ -217,12 +213,10 @@ document.getElementById("m2").addEventListener("input", () => {
 =========================================================== */
 
 function obtenerGravedadFinal(bloque, index, valor) {
-  let preg = bloques[bloque][index];
-  let base = preg.g;
 
-  /* Agua fría */
+  /* Agua fría → condición necesaria y suficiente */
   if (bloque === "form7" && index === 0)
-    return valor === "si" ? "bueno" : "medio";
+    return valor === "si" ? "bueno" : "muygrave";
 
   /* Aire + ventiladores */
   if (bloque === "form2" && (index === 2 || index === 3)) {
@@ -232,13 +226,10 @@ function obtenerGravedadFinal(bloque, index, valor) {
     if (aa && vent) {
       if (aa === "no" && vent === "si")
         return index === 2 ? "medio" : "bueno";
-
       if (aa === "si" && vent === "si")
         return "bueno";
-
       if (aa === "si" && vent === "no")
         return index === 2 ? "bueno" : "leve";
-
       if (aa === "no" && vent === "no")
         return index === 2 ? "medio" : "grave";
     }
@@ -252,7 +243,6 @@ function obtenerGravedadFinal(bloque, index, valor) {
     if (techo && planta) {
       if (techo === "no")
         return planta === "no" ? "medio" : "leve";
-
       if (techo === "si")
         return planta === "no" ? "leve" : "bueno";
     }
@@ -262,7 +252,7 @@ function obtenerGravedadFinal(bloque, index, valor) {
   if (bloque === "form5")
     return valor === "si" ? "bueno" : "leve";
 
-  return valor === "si" ? "bueno" : base;
+  return valor === "si" ? "bueno" : bloques[bloque][index].g;
 }
 
 /* ============================================================
@@ -274,26 +264,27 @@ function clasificarPunto() {
 
   Object.keys(respuestas).forEach(key => {
     let [b, idx] = key.split("_");
-    let v = respuestas[key];
-    let g = obtenerGravedadFinal(b, +idx, v);
+    let g = obtenerGravedadFinal(b, +idx, respuestas[key]);
 
-    if (v === "si") buenas++;
-
-    if (v === "no") {
-      if (g === "muygrave") muy++;
-      if (g === "grave") gra++;
-      if (g === "medio") med++;
-      if (g === "leve") lev++;
-    }
+    if (g === "bueno") buenas++;
+    if (g === "muygrave") muy++;
+    if (g === "grave") gra++;
+    if (g === "medio") med++;
+    if (g === "leve") lev++;
   });
 
-  /* REGLA ESTRUCTURAL */
-  if (buenas < 4)
+  if (
+    respuestas["form7_0"] === "no" || // agua fría
+    buenas < 4 ||
+    muy >= 1 ||
+    gra >= 4 ||
+    med >= 6 ||
+    lev >= 7
+  )
     return { estado: "rojo", muy, gra, med, lev, buenas };
 
-  if (muy >= 1 || gra >= 4) return { estado: "rojo", muy, gra, med, lev, buenas };
-  if (gra >= 2) return { estado: "amarillo", muy, gra, med, lev, buenas };
-  if (med >= 3) return { estado: "amarillo", muy, gra, med, lev, buenas };
+  if (gra >= 2 || med >= 3 || lev >= 4)
+    return { estado: "amarillo", muy, gra, med, lev, buenas };
 
   return { estado: "verde", muy, gra, med, lev, buenas };
 }
