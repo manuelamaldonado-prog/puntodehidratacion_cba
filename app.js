@@ -77,16 +77,15 @@ const bloques = {
     },
     {
       t: "¿Posee vegetación / edificios / medianeras, etc al norte?",
-      d: "Estos elementos ubicados al norte generan sombreado sobre el recinto.",
+      d: "Estos elementos ubicados al norte generan sombreado.",
       g: "medio"
     },
-     {
-      t: "¿Posee vegetación / edificios / medianeras, etc? al oeste?",
-      d: "Estos elementos ubicados al oeste generan sombreado sobre el recinto.",
+    {
+      t: "¿Posee vegetación / edificios / medianeras, etc al oeste?",
+      d: "Estos elementos ubicados al oeste generan sombreado.",
       g: "medio"
     }
-   ],
-     
+  ],
 
   /* BLOQUE 6 – DISEÑO */
   form6: [
@@ -105,11 +104,6 @@ const bloques = {
   /* BLOQUE 7 – SERVICIOS */
   form7: [
     {
-      t: "¿El punto cuenta con disponibilidad de agua potable?",
-      d: "Agua apta para consumo humano.",
-      g: "muygrave"
-    },
-    {
       t: "¿El punto cuenta con disponibilidad de agua fría?",
       d: "Agua fría proveniente de heladera, dispenser o botellón refrigerado.",
       g: "medio"
@@ -126,7 +120,6 @@ const bloques = {
     }
   ]
 };
-
 
 /* ============================================================
    GENERACIÓN DE FORMULARIOS
@@ -165,7 +158,6 @@ function generarFormularios() {
 
 generarFormularios();
 
-
 /* ============================================================
    GUARDAR RESPUESTAS
 =========================================================== */
@@ -174,12 +166,12 @@ function seleccionarRespuesta(bloque, index, valor, boton) {
   const key = `${bloque}_${index}`;
   respuestas[key] = valor;
 
-  const grupo = boton.parentElement.querySelectorAll(".btn-resp");
-  grupo.forEach(b => b.classList.remove("seleccionado"));
+  boton.parentElement
+    .querySelectorAll(".btn-resp")
+    .forEach(b => b.classList.remove("seleccionado"));
 
   boton.classList.add("seleccionado");
 }
-
 
 /* ============================================================
    DATOS GENERALES
@@ -188,40 +180,37 @@ function seleccionarRespuesta(bloque, index, valor, boton) {
 function setDatoGeneral(campo, valor, boton) {
   datosGenerales[campo] = valor;
 
-  let grupo = boton.parentNode.querySelectorAll("button");
-  grupo.forEach(b => b.classList.remove("seleccionado"));
+  boton.parentNode
+    .querySelectorAll("button")
+    .forEach(b => b.classList.remove("seleccionado"));
 
   boton.classList.add("seleccionado");
 }
 
-
 /* ============================================================
-   NAVEGACIÓN ENTRE PÁGINAS
+   NAVEGACIÓN
 =========================================================== */
 
 let pasoActual = 1;
 
 function mostrarPaso(n) {
-  document.querySelectorAll(".step")
-    .forEach(div => div.classList.remove("active"));
+  document.querySelectorAll(".step").forEach(d => d.classList.remove("active"));
   document.getElementById("step" + n).classList.add("active");
 }
 
 function nextStep() { pasoActual++; mostrarPaso(pasoActual); }
 function prevStep() { pasoActual--; mostrarPaso(pasoActual); }
 
-
 /* ============================================================
    CAPACIDAD EN TIEMPO REAL
 =========================================================== */
 
 document.getElementById("m2").addEventListener("input", () => {
-  let m2 = parseFloat(document.getElementById("m2").value) || 0;
+  let m2 = parseFloat(m2.value) || 0;
   let capacidad = Math.floor(m2 / 3.5);
-  document.getElementById("capacidadTexto").innerHTML =
+  capacidadTexto.innerHTML =
     `<strong>Personas permitidas:</strong> ${capacidad}`;
 });
-
 
 /* ============================================================
    LÓGICAS ESPECIALES DE CLASIFICACIÓN
@@ -231,12 +220,8 @@ function obtenerGravedadFinal(bloque, index, valor) {
   let preg = bloques[bloque][index];
   let base = preg.g;
 
-  /* Agua potable */
-  if (bloque === "form7" && index === 0)
-    return valor === "si" ? "bueno" : "muygrave";
-
   /* Agua fría */
-  if (bloque === "form7" && index === 1)
+  if (bloque === "form7" && index === 0)
     return valor === "si" ? "bueno" : "medio";
 
   /* Aire + ventiladores */
@@ -245,127 +230,72 @@ function obtenerGravedadFinal(bloque, index, valor) {
     let vent = respuestas["form2_3"];
 
     if (aa && vent) {
+      if (aa === "no" && vent === "si")
+        return index === 2 ? "medio" : "bueno";
 
-      if (aa === "no" && vent === "si") {
-        if (index === 2) return "medio";
-        if (index === 3) return "bueno";
-      }
+      if (aa === "si" && vent === "si")
+        return "bueno";
 
-      if (aa === "si" && vent === "si") return "bueno";
+      if (aa === "si" && vent === "no")
+        return index === 2 ? "bueno" : "leve";
 
-      if (aa === "si" && vent === "no") {
-        if (index === 2) return "bueno";
-        if (index === 3) return "leve";
-      }
-
-      if (aa === "no" && vent === "no") {
-        if (index === 2) return "medio";
-        if (index === 3) return "grave";
-      }
+      if (aa === "no" && vent === "no")
+        return index === 2 ? "medio" : "grave";
     }
   }
 
   /* Techo + planta superior */
-  if (bloque === "form4" && index === 2) {
+  if (bloque === "form4") {
     let techo = respuestas["form4_0"];
-    let planta = respuestas["form4_2"];
+    let planta = respuestas["form4_1"];
 
     if (techo && planta) {
+      if (techo === "no")
+        return planta === "no" ? "medio" : "leve";
 
-      if (techo === "no") {
-        if (planta === "no") return "medio";
-        if (planta === "si") return "leve";
-      }
-
-      if (techo === "si") {
-         if (planta === "no") return "leve";
-        if (planta === "si") return "bueno";
-      }
+      if (techo === "si")
+        return planta === "no" ? "leve" : "bueno";
     }
   }
-
 
   /* Protecciones pasivas */
   if (bloque === "form5")
     return valor === "si" ? "bueno" : "leve";
 
-  /* Regla final */
   return valor === "si" ? "bueno" : base;
 }
 
-
 /* ============================================================
-   CLASIFICACIÓN GENERAL DEL PUNTO
+   CLASIFICACIÓN GENERAL
 =========================================================== */
+
 function clasificarPunto() {
-  let muy = 0, gra = 0, med = 0, lev = 0;
+  let muy = 0, gra = 0, med = 0, lev = 0, buenas = 0;
 
-  let aguaPotNo = respuestas["form7_0"] === "no";
-  let aguaFria = respuestas["form7_1"] === "si";
-
-  let tipoEspacio = "";
-
-  // Identificar tipo de espacio
-if (!aguaPotNo && aguaFria) {
-    tipoEspacio = "Punto de Hidratación";
-  } else {
-    tipoEspacio = "Área Climatizada";
-  }
-
-  // Contar fallas según gravedad final
   Object.keys(respuestas).forEach(key => {
     let [b, idx] = key.split("_");
     let v = respuestas[key];
-    let gravedad = obtenerGravedadFinal(b, parseInt(idx), v);
+    let g = obtenerGravedadFinal(b, +idx, v);
+
+    if (v === "si") buenas++;
 
     if (v === "no") {
-      if (gravedad === "muygrave") muy++;
-      if (gravedad === "grave") gra++;
-      if (gravedad === "medio") med++;
-      if (gravedad === "leve") lev++;
+      if (g === "muygrave") muy++;
+      if (g === "grave") gra++;
+      if (g === "medio") med++;
+      if (g === "leve") lev++;
     }
   });
 
-  // PRIORIDAD ABSOLUTA: muy graves ⇒ rojo
-  if (muy >= 1) {
-    return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
-  }
+  /* REGLA ESTRUCTURAL */
+  if (buenas < 4)
+    return { estado: "rojo", muy, gra, med, lev, buenas };
 
-  // Evaluación por fallas graves
-  if (gra >= 4) {
-    return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
-  } 
-  if (gra === 2 || gra === 3) {
-    return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
-  } 
-  if (gra === 1) {
-    return { estado: "verde", tipoEspacio, muy, gra, med, lev };
-  }
+  if (muy >= 1 || gra >= 4) return { estado: "rojo", muy, gra, med, lev, buenas };
+  if (gra >= 2) return { estado: "amarillo", muy, gra, med, lev, buenas };
+  if (med >= 3) return { estado: "amarillo", muy, gra, med, lev, buenas };
 
-  // Evaluación por fallas medias
-  if (med === 6 || med === 7) {
-    return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
-  }
-  if (med === 3 || med === 4 || med === 5 ) {
-    return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
-  }
-  if (med === 1 || med === 2) {
-    return { estado: "verde", tipoEspacio, muy, gra, med, lev };
-  }
-
-  // Evaluación por fallas leves
-  if (lev >= 7) {
-    return { estado: "rojo", tipoEspacio, muy, gra, med, lev };
-  }
-  if (lev === 4 || lev === 5 || lev === 6) {
-    return { estado: "amarillo", tipoEspacio, muy, gra, med, lev };
-  }
-  if (lev === 1 || lev === 2 || lev === 3) {
-    return { estado: "verde", tipoEspacio, muy, gra, med, lev };
-  }
-
-  // Si no hay fallas
-  return { estado: "verde", tipoEspacio, muy, gra, med, lev };
+  return { estado: "verde", muy, gra, med, lev, buenas };
 }
 
 /* ============================================================
@@ -375,45 +305,21 @@ if (!aguaPotNo && aguaFria) {
 function calcular() {
 
   const clasif = clasificarPunto();
-  let { estado, tipoEspacio, muy, gra, med, lev } = clasif;
+  let { estado, muy, gra, med, lev, buenas } = clasif;
 
   let m2 = parseFloat(document.getElementById("m2").value) || 0;
   let capacidad = Math.floor(m2 / 3.5);
 
-  let aguaFriaDisponible = respuestas["form7_1"] === "si";
-
-  // Empieza el HTML
   let html = `
-  <h2>${estado === "rojo" ? "🟥 Condiciones críticas" :
-        estado === "amarillo" ? "🟡 Requiere mejoras" :
-        "🟢 Buen funcionamiento"}</h2>
+  <h2>${
+    estado === "rojo" ? "🟥 Área NO apta como área climatizada" :
+    estado === "amarillo" ? "🟡 Área climatizada con mejoras necesarias" :
+    "🟢 Área climatizada apta"
+  }</h2>
 
-  <p><strong>Tipo de espacio:</strong> ${tipoEspacio}</p>
   <p><strong>Área total:</strong> ${m2} m²</p>
   <p><strong>Personas permitidas:</strong> ${capacidad}</p>
 
-  <hr>
-  `;
-
-  // ===========================
-  // MENSAJES ESPECIALES
-  // ===========================
-
-  if (aguaFriaDisponible && estado === "rojo") {
-    html += `<h2 style="color:#d40000;">CUMPLE PUNTO DE HIDRATACIÓN</h2>`;
-  }
-
-  if (estado === "verde" || estado === "amarillo") {
-    html += `<h2 style="color:#0077cc;">CUMPLE ÁREA CLIMATIZADA</h2>`;
-  }
-
-  if (aguaFriaDisponible && (estado === "verde" || estado === "amarillo")) {
-    html += `<h2 style="color:#22aa22;">CUMPLE PUNTO DE HIDRATACIÓN</h2>`;
-  }
-
-  // ===========================
-
-  html += `
   <hr>
 
   <h3>Datos generales del relevamiento</h3>
@@ -421,17 +327,19 @@ function calcular() {
   <p><strong>Responsable del relevamiento:</strong> ${document.getElementById("persona").value}</p>
   <p><strong>Días:</strong> ${document.getElementById("dias").value}</p>
   <p><strong>Horarios:</strong> ${document.getElementById("horarios").value}</p>
-  <p><strong>Servicio médico (107):</strong> ${datosGenerales.medico ? datosGenerales.medico.toUpperCase() : "NO DECLARADO"}</p>
+  <p><strong>Servicio médico (107):</strong>
+    ${datosGenerales.medico ? datosGenerales.medico.toUpperCase() : "NO DECLARADO"}
+  </p>
 
   <hr>
 
   <h3>Resumen de clasificación</h3>
   <ul>
-    <li><strong>Muy graves (🚨):</strong> ${muy}</li>
-    <li><strong>Graves (🔴):</strong> ${gra}</li>
-    <li><strong>Medias (🟠):</strong> ${med}</li>
+    <li><strong>Buenas (🟢):</strong> ${buenas}</li>
     <li><strong>Leves (🟡):</strong> ${lev}</li>
-    <li><strong>Buenas (🟢):</strong> ${Object.keys(respuestas).length - (muy + gra + med + lev)}</li>
+    <li><strong>Medias (🟠):</strong> ${med}</li>
+    <li><strong>Graves (🔴):</strong> ${gra}</li>
+    <li><strong>Muy graves (🚨):</strong> ${muy}</li>
   </ul>
 
   <hr>
@@ -452,7 +360,6 @@ function calcular() {
     html += `<h4>${nombresBloques[b]}</h4>`;
 
     bloques[b].forEach((pregunta, idx) => {
-
       let key = `${b}_${idx}`;
       let valor = respuestas[key];
 
@@ -481,23 +388,21 @@ function calcular() {
     html += `<hr>`;
   });
 
-  // SECCIÓN DE COMENTARIOS Y FOTOS
   html += `
-  <h3>Comentarios adicionales</h3>
-  <textarea style="width:100%; height:120px;"></textarea>
+    <h3>Comentarios adicionales</h3>
+    <textarea style="width:100%; height:120px;"></textarea>
 
-  <h3>Fotografías (5 máximo)</h3>
-  <div style="display:flex; flex-wrap:wrap; gap:10px;">
-    <input type="file" accept="image/*">
-    <input type="file" accept="image/*">
-    <input type="file" accept="image/*">
-    <input type="file" accept="image/*">
-    <input type="file" accept="image/*">
-  </div>
+    <h3>Fotografías (5 máximo)</h3>
+    <div style="display:flex; flex-wrap:wrap; gap:10px;">
+      <input type="file" accept="image/*">
+      <input type="file" accept="image/*">
+      <input type="file" accept="image/*">
+      <input type="file" accept="image/*">
+      <input type="file" accept="image/*">
+    </div>
   `;
 
   document.getElementById("resultado").innerHTML = html;
-
   nextStep();
 }
 
@@ -512,7 +417,7 @@ function descargarPDF() {
   ventana.document.write(`
     <html>
     <head>
-      <title>Informe Punto de Hidratación</title>
+      <title>Informe Área Climatizada</title>
       <style>
         body {
           font-family: 'Public Sans', sans-serif;
@@ -534,6 +439,10 @@ function descargarPDF() {
     </head>
     <body>${contenido}</body></html>
   `);
+
+  ventana.document.close();
+  ventana.print();
+}
 
   ventana.document.close();
   ventana.print();
