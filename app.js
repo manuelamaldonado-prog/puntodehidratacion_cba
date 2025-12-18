@@ -205,12 +205,19 @@ function prevStep() { pasoActual--; mostrarPaso(pasoActual); }
    CAPACIDAD EN TIEMPO REAL
 =========================================================== */
 
-document.getElementById("m2").addEventListener("input", () => {
-  let m2 = parseFloat(m2.value) || 0;
-  let capacidad = Math.floor(m2 / 3.5);
-  capacidadTexto.innerHTML =
-    `<strong>Personas permitidas:</strong> ${capacidad}`;
-});
+document.addEventListener("DOMContentLoaded", () => {
+  const inputM2 = document.getElementById("m2");
+  const textoCapacidad = document.getElementById("capacidadTexto");
+
+  if (!inputM2 || !textoCapacidad) return;
+
+  inputM2.addEventListener("input", () => {
+    const m2 = parseFloat(inputM2.value) || 0;
+    const capacidad = Math.floor(m2 / 3.5);
+
+    textoCapacidad.innerHTML =
+      `<strong>Personas permitidas:</strong> ${capacidad}`;
+  });
 
 /* ============================================================
    LÓGICAS ESPECIALES DE CLASIFICACIÓN
