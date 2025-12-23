@@ -402,9 +402,24 @@ function calcular() {
 =========================================================== */
 
 function descargarPDF() {
-  const contenido = document.getElementById("resultado").innerHTML;
+
+  // Clonamos el resultado
+  const resultadoOriginal = document.getElementById("resultado");
+  const resultadoClon = resultadoOriginal.cloneNode(true);
+
+  // 🔑 REEMPLAZAR TEXTAREA POR TEXTO PLANO
+  const textarea = resultadoClon.querySelector("textarea");
+  if (textarea) {
+    const texto = textarea.value;
+    const p = document.createElement("p");
+    p.innerHTML = texto
+      ? texto.replace(/\n/g, "<br>")
+      : "<em>Sin observaciones.</em>";
+    textarea.replaceWith(p);
+  }
 
   const ventana = window.open("", "_blank");
+
   ventana.document.write(`
     <html>
     <head>
@@ -419,18 +434,19 @@ function descargarPDF() {
         h3 {
           border-bottom: 2px solid #ddd;
         }
-        textarea {
-          width: 100%;
-          height: 120px;
-          border: 1px solid #aaa;
-          padding: 8px;
-          border-radius: 6px;
-        }
       </style>
     </head>
-    <body>${contenido}</body></html>
+    <body>
+      ${resultadoClon.innerHTML}
+    </body>
+    </html>
   `);
 
   ventana.document.close();
-  ventana.print();
+
+  // Esperamos a que cargue antes de imprimir
+  ventana.onload = () => {
+    ventana.focus();
+    ventana.print();
+  };
 }
