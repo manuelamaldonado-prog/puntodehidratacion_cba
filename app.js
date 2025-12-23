@@ -16,7 +16,7 @@ const bloques = {
     {
       t: "¿El recinto cuenta con temperatura estable?",
       d: "Considerar que mantiene una temperatura agradable y homogénea.",
-      g: "grave"
+      g: "muygrave"
     },
     {
       t: "¿Hay circulación de aire natural (ventilación cruzada)?",
