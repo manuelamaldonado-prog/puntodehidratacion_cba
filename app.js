@@ -275,7 +275,7 @@ function clasificarPunto() {
 
   if (
     respuestas["form7_0"] === "no" || // agua fría
-    buenas < 4 ||
+    buenas > 5 ||
     muy >= 1 ||
     gra >= 4 ||
     med >= 6 ||
